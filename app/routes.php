@@ -33,3 +33,8 @@ SimpleRouter::get('/ip-validator/config/iframe_config.json', function() {
 SimpleRouter::post('/save_iframe.php', function() {
     include 'save_iframe.php';
 });
+
+// Rota para acessar admin.html
+SimpleRouter::get('/ip-validator/admin.html', function() {
+    include 'admin.html'; // Certifique-se de que o arquivo admin.html esteja no diretório correto
+});
