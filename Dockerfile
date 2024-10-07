@@ -10,9 +10,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Habilita o módulo de reescrita do Apache
 RUN a2enmod rewrite
 
-# Instala o nano
-RUN apt-get update && apt-get install -y nano
-
 # Copiar os arquivos do projeto para o diretório do Apache
 COPY . /var/www/html/
 
