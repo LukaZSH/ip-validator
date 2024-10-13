@@ -3,16 +3,17 @@ Esse projeto foi desenvolvido por iniciativa minha como estagiário no departame
 
 Essa aplicação tem como seu principal objetivo permitir que apenas as pessoas conectadas ao Wi-Fi do campus de Apucarana consigam acessar os formulários de validação de presença via QRcode que são fornecidos aos finais de eventos e palestras para obter os Certificados de Participação, visando tentar restringir o acesso de pessoas que não estão no evento/palestra em questão.
 
-## Partes do projeto
-- <h4> 1º parte - Codificar a lógica do problema de acordo com a Arquitetura de Rede da UNESPAR</h4>
+<h2> Partes do projeto </h2>
+
+## 1º parte - Codificar a lógica do problema de acordo com a Arquitetura de Rede da UNESPAR
 Depois de algumas tentativas falhas utilizando a linguagem de programação Python e seus recursos, um amigo sugeriu utilizar a linguagem PHP que serve muito bem para esse tipo de aplicação web com foco em Back-end. Basicamente temos que autorizar apenas os endereços de IP que o servidor da Unespar atribui aos usuários, no caso, de 1922.168.3.47 até 192.168.8.255.
 
 Dessa forma, o código pega o IP do usuário que está acessando e compara com o range de IP's permitidos, caso esteja, acesso liberado, caso contrário, não acessa.
 
 ![Range de IP](https://github.com/user-attachments/assets/3c918f2e-16fa-458e-afbf-98dee0f677b3)
 
------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h4> 2º parte - Teste em Localhost e Hospedar a Aplicação web em algum servidor Back-end</h4>
+## 2º parte - Teste em Localhost e Hospedar a Aplicação web em algum servidor Back-end</h4>
+
 Como ainda não obtive autorização para colocar essa aplicação no servidor da Universidade, então tive que utilizar outros meios para que eu pudesse fazer os testes.
 
 Teste localhost: Utilizando o Xampp e o Apache para criar um servidor web localhost no meu computador, hospedei o projeto para ir testando até ficar tudo funcional.
@@ -28,8 +29,7 @@ Teste em servidor: Utilizando um Ubuntu Server em um desktop, consegui hospedar 
 
 
 
------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-<h4>3º parte - Estrutura do servidor "caseiro" montado para hospedar o projeto</h4>
+## 3º parte - Estrutura do servidor "caseiro" montado para hospedar o projeto
 
 Para montar esse servidor "caseiro", utilizei um computador de mesa (desktop) e instalei um SO de servidor, o `Ubuntu Server` , para que ele funcionasse como um servidor. Após a instalação do SO, instalei o `Docker` e todos os seus recursos. Em seguida baixei o proejto no servidor, fiz toda adaptação e configuração para o projeto funcionar corretvia contêiner Doker. O motivo de ter colocado no Docker foi mais para treinar e conhecer melhor os benefícios dessa tecnologia. Uma das vantagens do Docker é funcionar em um abiente isolado do Sistema Operacional, que são chamados de contêiner, e como o meu projeto está funcionando corrtamente no ambiente, então posso utilizar a imagem do contêiner em outro sistema que tenha o Docker instalado e o meu projeto funcionará normalmente, já que dentro do contêiner tem todas as bibliotecas, dependências e configurações necessárias para funcionar.
 
