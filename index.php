@@ -1,13 +1,7 @@
 <?php
 
-require_once 'vendor/autoload.php';
-require_once 'app/routes.php';
+require_once 'vendor/autoload.php'; // Autoload das dependências do Composer
+require_once 'app/routes.php'; // Arquivo de rotas
 
-use app\routes\Routes;
-
-// Registrar as rotas
-Routes::registerRoutes();
-
-// Iniciar o roteador
+// Inicia o roteador
 Pecee\SimpleRouter\SimpleRouter::start();
-
