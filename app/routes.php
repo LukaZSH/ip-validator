@@ -1,8 +1,25 @@
 <?php
 namespace app\routes;
 
+use Pecee\SimpleRouter\SimpleRouter;
+
 class Routes
 {
+    public static function registerRoutes()
+    {
+        $routes = self::get();
+
+        // Registrar rotas GET
+        foreach ($routes['get'] as $route => $action) {
+            SimpleRouter::get($route, $action);
+        }
+
+        // Registrar rotas POST
+        foreach ($routes['post'] as $route => $action) {
+            SimpleRouter::post($route, $action);
+        }
+    }
+
     public static function get()
     {
         return [
@@ -26,7 +43,7 @@ class Routes
             'post' => [
                 '/ip-validator/validate' => 'HomeController@validateIP',
                 '/save_iframe.php' => fn() => include 'save_iframe.php',
-            ]
+            ],
         ];
     }
 }
