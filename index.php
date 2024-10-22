@@ -3,5 +3,11 @@
 require_once 'vendor/autoload.php';
 require_once 'app/routes.php';
 
-// Inicia o roteador
+use app\routes\Routes;
+
+// Registrar as rotas
+Routes::registerRoutes();
+
+// Iniciar o roteador
 Pecee\SimpleRouter\SimpleRouter::start();
+
