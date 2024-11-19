@@ -33,7 +33,8 @@ Teste em servidor: Utilizando um Ubuntu Server em um desktop, consegui hospedar 
 
 Para montar esse servidor "caseiro", utilizei um computador de mesa (desktop) e instalei um SO de servidor, o `Ubuntu Server` , para que ele funcionasse como um servidor. Após a instalação do SO, instalei o `Docker` e todos os seus recursos. Em seguida baixei o proejto no servidor, fiz toda adaptação e configuração para o projeto funcionar corretvia contêiner Doker. O motivo de ter colocado no Docker foi mais para treinar e conhecer melhor os benefícios dessa tecnologia. Uma das vantagens do Docker é funcionar em um abiente isolado do Sistema Operacional, que são chamados de contêiner, e como o meu projeto está funcionando corrtamente no ambiente, então posso utilizar a imagem do contêiner em outro sistema que tenha o Docker instalado e o meu projeto funcionará normalmente, já que dentro do contêiner tem todas as bibliotecas, dependências e configurações necessárias para funcionar.
 
-(imagem do Docker ou do servidor sla)
+![20241118_203206](https://github.com/user-attachments/assets/7268088c-2e2b-4425-b211-08b25ca4a288)
+
 
 ## Melhorias feitas
 Já que uma vez que a pessoa acesse a página do Google forms para validar a presença dela, ela pode obter o link do forms e divulgar para outras pessoas, dessa forma, pensei em colocar o formulário dentro de outra página para "esconder" o link do forms para que as pessoas não consigam divulgar, assim o formulário vai estar em uma página que eu criei, que só será acessada se a pessoa estiver no Wi-Fi do campus.
