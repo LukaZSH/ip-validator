@@ -1,7 +1,7 @@
 ## Projeto - Autenticador de IP via QRcode
 Esse projeto foi desenvolvido por iniciativa minha como estagiário no departamento de T.I. da UNESPAR campus de Apucarana.
 
-Essa aplicação tem como seu principal objetivo permitir que apenas as pessoas conectadas ao Wi-Fi do campus de Apucarana consigam acessar os formulários de validação de presença via QRcode que são fornecidos aos finais de eventos e palestras para obter os Certificados de Participação, visando tentar restringir o acesso de pessoas que não estão no evento/palestra em questão.
+Essa aplicação tem como principal objetivo permitir que apenas as pessoas conectadas ao Wi-Fi do campus de Apucarana consigam acessar os formulários de validação de presença via QRcode que são fornecidos aos finais de eventos e palestras para obter os Certificados de Participação, visando tentar restringir o acesso de pessoas que não estão no evento/palestra em questão.
 
 <h2> Partes do projeto </h2>
 
