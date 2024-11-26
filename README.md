@@ -6,7 +6,7 @@ Essa aplicação tem como principal objetivo permitir que apenas as pessoas cone
 <h2> Partes do projeto </h2>
 
 ## 1º parte - Codificar a lógica do problema de acordo com a Arquitetura de Rede da UNESPAR
-Depois de algumas tentativas falhas utilizando a linguagem de programação Python e seus recursos, um amigo sugeriu utilizar a linguagem PHP que serve muito bem para esse tipo de aplicação web com foco em Back-end. Basicamente temos que autorizar apenas os endereços de IP que o servidor da Unespar atribui aos usuários, no caso, de 1922.168.3.47 até 192.168.8.255.
+Depois de algumas tentativas falhas utilizando a linguagem de programação Python e seus recursos, um amigo sugeriu utilizar a linguagem PHP que serve muito bem para esse tipo de aplicação web com foco em Back-end. Basicamente temos que autorizar apenas os endereços de IP que o servidor da Unespar atribui aos usuários, no caso, de 192.168.3.47 até 192.168.8.255.
 
 Dessa forma, o código pega o IP do usuário que está acessando e compara com o range de IP's permitidos, caso esteja, acesso liberado, caso contrário, não acessa.
 
