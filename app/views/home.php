@@ -88,7 +88,7 @@
             <img src="https://www.unespar.edu.br/sou-mais-unespar/arquivos/logo-unespar-original.png/@@images/47fd7595-1494-49d0-a856-d1b51cd6b460.png" alt="logo">
             <h1>Valide sua presença</h1>
             <p>Clique no botão abaixo para validar sua presença:</p>
-            <form action="/ip-validator/validate" method="POST">
+            <form action="/validate" method="POST">
                 <button type="submit">Validar</button>
             </form>
         </div>

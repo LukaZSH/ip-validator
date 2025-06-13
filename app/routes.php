@@ -3,37 +3,53 @@
 use Pecee\SimpleRouter\SimpleRouter;
 use app\controllers\HomeController;
 
-
-// Rota para a página inicial (home)
+// Rota principal agora é a raiz "/"
 SimpleRouter::get('/', [HomeController::class, 'index']);
-SimpleRouter::get('/ip-validator/', [HomeController::class, 'index']);
 
-// Rota para validar o IP do usuário (POST)
-SimpleRouter::post('/ip-validator/validate', [HomeController::class, 'validateIP']);
+// Rota para validação de IP
+SimpleRouter::post('/validate', [HomeController::class, 'validateIP']);
 
-// Rota para acessar o forms.html
-SimpleRouter::get('/ip-validator/forms.html', function() {
-    include 'forms.html';
+// Rota para a página do formulário
+SimpleRouter::get('/forms.html', function() {
+    include __DIR__ . '/../forms.html';
 });
 
-// Rota para acessar o iframe_config.json
-SimpleRouter::get('/ip-validator/config/iframe_config.json', function() {
+// Rota para o arquivo de configuração JSON
+SimpleRouter::get('/config/iframe_config.json', function() {
     $filePath = __DIR__ . '/../config/iframe_config.json';
-
     if (file_exists($filePath)) {
         header('Content-Type: application/json');
-        echo file_get_contents($filePath);
+        readfile($filePath);
     } else {
         http_response_code(404);
         echo json_encode(['error' => 'Arquivo não encontrado']);
     }
 });
 
-// Nova rota para salvar o código do iframe (POST)
-SimpleRouter::post('/save_iframe.php', function() {
-    include 'save_iframe.php';
+
+// --- ROTAS DE ADMINISTRAÇÃO ---
+
+// Rota para a página de login
+SimpleRouter::get('/login', function() {
+    include __DIR__ . '/../login.html';
 });
 
-SimpleRouter::get('/ip-validator/admin.html', function() {
-    include 'admin.html';
+// Rota para o script que processa o login
+SimpleRouter::post('/auth.php', function() {
+    include __DIR__ . '/../auth.php';
+});
+
+// Rota para a página de admin
+SimpleRouter::get('/admin', function() {
+    include __DIR__ . '/../admin.php';
+});
+
+// Rota para salvar o iframe
+SimpleRouter::post('/save_iframe.php', function() {
+    include __DIR__ . '/../save_iframe.php';
+});
+
+// Rota para o logout
+SimpleRouter::get('/logout', function() {
+    include __DIR__ . '/../logout.php';
 });

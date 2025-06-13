@@ -1,54 +1,39 @@
-## Projeto - Autenticador de IP via QRcode
-Projeto desenvolvido durante meu estágio no departamento de TI da UNESPAR - Apucarana
+# Projeto - Autenticador de IP via QRcode
+Projeto desenvolvido durante meu estágio no departamento de TI da UNESPAR - Apucarana.
 
-Essa aplicação tem como principal objetivo permitir que apenas as pessoas conectadas ao Wi-Fi do campus de Apucarana consigam acessar os formulários de validação de presença via QRcode que são fornecidos aos finais de eventos e palestras para obter os Certificados de Participação, visando tentar restringir o acesso de pessoas que não estão no evento/palestra em questão.
+Essa aplicação tem como principal objetivo permitir que apenas as pessoas conectadas ao Wi-Fi do campus de Apucarana consigam acessar os formulários de validação de presença. Esses formulários são normalmente distribuídos via QR Code ao final de eventos e palestras para a obtenção de Certificados de Participação, e a ferramenta visa restringir o acesso de pessoas que não estão fisicamente presentes no evento.
 
-<h2> Partes do projeto </h2>
+## Partes do projeto
 
-## 1º parte - Codificar a lógica do problema de acordo com a Arquitetura de Rede da UNESPAR
-Depois de algumas tentativas falhas utilizando a linguagem de programação Python e seus recursos, um amigo sugeriu utilizar a linguagem PHP que serve muito bem para esse tipo de aplicação web com foco em Back-end. Basicamente temos que autorizar apenas os endereços de IP que o servidor da Unespar atribui aos usuários, no caso, de 192.168.3.47 até 192.168.8.255.
+### 1º parte - Lógica de Validação de Rede
+O núcleo da aplicação utiliza PHP para identificar o endereço de IP do usuário que está fazendo o acesso. Em seguida, o sistema compara este IP com a faixa de IPs designada para a rede Wi-Fi do campus da UNESPAR (de `192.168.3.47` até `192.168.8.255`). Caso o IP do usuário esteja dentro dessa faixa, o acesso ao formulário de presença é concedido. Caso contrário, o acesso é bloqueado.
 
-Dessa forma, o código pega o IP do usuário que está acessando e compara com o range de IP's permitidos, caso esteja, acesso liberado, caso contrário, não acessa.
+### 2º parte - Hospedagem e Testes
+Inicialmente testado em um ambiente `localhost` com XAMPP, o projeto foi migrado para um servidor dedicado (Ubuntu Server) para simular um ambiente de produção real. O deployment no servidor é gerenciado com Docker, garantindo que a aplicação funcione em um contêiner isolado com todas as suas dependências, o que facilita a portabilidade e a manutenção.
 
-![Range de IP](https://github.com/user-attachments/assets/3c918f2e-16fa-458e-afbf-98dee0f677b3)
+![Servidor caseiro](https://github.com/user-attachments/assets/7268088c-2e2b-4425-b211-08b25ca4a288)
 
-## 2º parte - Teste em Localhost e Hospedar a Aplicação web em algum servidor Back-end</h4>
+### 3º parte - Melhorias e Funcionalidades Adicionais
 
-Como ainda não obtive autorização para colocar essa aplicação no servidor da Universidade, então tive que utilizar outros meios para que eu pudesse fazer os testes.
+A versão inicial do projeto foi aprimorada com funcionalidades cruciais para torná-la uma ferramenta robusta, segura e de fácil manutenção pela equipe de TI.
 
-Teste localhost: Utilizando o Xampp e o Apache para criar um servidor web localhost no meu computador, hospedei o projeto para ir testando até ficar tudo funcional.
+#### Painel Administrativo com Login Seguro
+Foi desenvolvido um painel administrativo protegido por um sistema de login e senha. Apenas usuários autenticados (a equipe de TI) podem acessar a área de gerenciamento, garantindo que somente pessoas autorizadas possam realizar alterações no sistema.
 
-OBS: No meu próprio computador não funcionava por conta do IP localhost ser 127.0.0.1, então o código estava funcionado corretamente :laughing:
+`[INSERIR PRINT DA TELA DE LOGIN AQUI]`
 
-![image](https://github.com/user-attachments/assets/15f17b19-adee-489c-8964-e1646c000eb9)
+#### Atualização Dinâmica do Formulário
+Através do painel de admin, é possível atualizar o formulário de presença de forma dinâmica. O administrador pode simplesmente colar o novo código `<iframe>` (do Google Forms ou Microsoft Forms) em uma caixa de texto e salvar. O sistema atualiza um arquivo de configuração central, e o novo formulário passa a ser exibido para os usuários imediatamente, sem a necessidade de alterar o código-fonte ou fazer um novo deploy da aplicação.
 
+`[INSERIR PRINT DA TELA DE ADMIN AQUI]`
 
-Teste em servidor: Utilizando um Ubuntu Server em um desktop, consegui hospedar o projeto para testar/simular se funcionaria em outro local além do meu computador.
+#### Validação de Segurança do Iframe
+Para prevenir a inserção de códigos maliciosos (ataques de XSS), o sistema valida no servidor todo `<iframe>` submetido. Ele verifica se o código contém de fato uma tag `<iframe>` e se sua origem (o atributo `src`) pertence a um dos provedores permitidos (Google Forms e Microsoft Forms). Qualquer código que não passe nessa validação é rejeitado.
 
-![forms indexado](https://github.com/user-attachments/assets/d64de7cf-1dcb-4f7c-9db3-e11917c7d8d0)
+#### URL Amigável com DNS Local
+Para profissionalizar o acesso, o antigo endereço baseado em IP (`http://192.168.3.2/ip-validator/`) foi substituído por um nome de domínio local e amigável (`http://presenca.unespar.local/ip-validator/`). Isso foi alcançado através da configuração de um "Host Override" no servidor DNS da rede (pfSense), tornando o acesso mais fácil de lembrar e compartilhar.
 
+### Tecnologias Utilizadas no Projeto
 
-
-## 3º parte - Estrutura do servidor "caseiro" montado para hospedar o projeto
-
-Para montar esse servidor "caseiro", utilizei um computador de mesa (desktop) e instalei um SO de servidor, o `Ubuntu Server` , para que ele funcionasse como um servidor. Após a instalação do SO, instalei o `Docker` e todos os seus recursos. Em seguida baixei o proejto no servidor, fiz toda adaptação e configuração para o projeto funcionar corretvia contêiner Doker. O motivo de ter colocado no Docker foi mais para treinar e conhecer melhor os benefícios dessa tecnologia. Uma das vantagens do Docker é funcionar em um abiente isolado do Sistema Operacional, que são chamados de contêiner, e como o meu projeto está funcionando corrtamente no ambiente, então posso utilizar a imagem do contêiner em outro sistema que tenha o Docker instalado e o meu projeto funcionará normalmente, já que dentro do contêiner tem todas as bibliotecas, dependências e configurações necessárias para funcionar.
-
-![20241118_203206](https://github.com/user-attachments/assets/7268088c-2e2b-4425-b211-08b25ca4a288)
-
-
-## Melhorias feitas
-Já que uma vez que a pessoa acesse a página do Google forms para validar a presença dela, ela pode obter o link do forms e divulgar para outras pessoas, dessa forma, pensei em colocar o formulário dentro de outra página para "esconder" o link do forms para que as pessoas não consigam divulgar, assim o formulário vai estar em uma página que eu criei, que só será acessada se a pessoa estiver no Wi-Fi do campus.
-
-![image](https://github.com/user-attachments/assets/c5733c20-6ebe-4d45-86fe-9bf1ba02ffde)
-
-
-
-## Melhorias futuras
-Implementar um método de trocar automaticamente o link do forms dentro do código, já que atualmente precisa trocar manualmente no código para que a página do formulário mostre-o na internet.
-
-
-## :heavy_check_mark: Tecnologias utilizadas no projeto
 <a href="https://skillicons.dev">
-<img src="https://skillicons.dev/icons?i=git,php,vscode,bash,linux,ubuntu,docker"/>
-
-
+<img src="https://skillicons.dev/icons?i=git,php,vscode,bash,linux,ubuntu,docker,html,css,javascript"/>

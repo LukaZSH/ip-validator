@@ -25,7 +25,7 @@ class HomeController {
         // Verificar se o IP está na faixa permitida
         if ($this->isIPInRange($IPUser, $allowedIPRangeStart, $allowedIPRangeEnd)) {
             // Redirecionar para forms.html se o IP estiver dentro da faixa
-            header('Location: /ip-validator/forms.html');
+            header('Location: /forms.html');
             exit;
         } else {
             echo "IP não permitido. Tente novamente.";
