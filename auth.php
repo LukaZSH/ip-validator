@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['username'] = $username;
 
         // Redireciona para a página de administração
-        header('Location: /admin'); // Usaremos uma rota mais amigável
+        header('Location: /admin');
         exit;
     } else {
         // Credenciais incorretas, redireciona de volta para o login com um erro
