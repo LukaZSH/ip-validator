@@ -1,4 +1,11 @@
 <?php
+
+// --- INÍCIO DO CÓDIGO DE DEPURAÇÃO ---
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// --- FIM DO CÓDIGO DE DEPURAÇÃO ---
+
 session_start();
 
 // 1. Verificação de Segurança
