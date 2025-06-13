@@ -20,12 +20,13 @@ A versão inicial do projeto foi aprimorada com funcionalidades cruciais para to
 #### Painel Administrativo com Login Seguro
 Foi desenvolvido um painel administrativo protegido por um sistema de login e senha. Apenas usuários autenticados (a equipe de TI) podem acessar a área de gerenciamento, garantindo que somente pessoas autorizadas possam realizar alterações no sistema.
 
-`[INSERIR PRINT DA TELA DE LOGIN AQUI]`
+![login](https://github.com/user-attachments/assets/379872e9-a659-411f-a7e1-4f6101f24c77)
+
 
 #### Atualização Dinâmica do Formulário
 Através do painel de admin, é possível atualizar o formulário de presença de forma dinâmica. O administrador pode simplesmente colar o novo código `<iframe>` (do Google Forms ou Microsoft Forms) em uma caixa de texto e salvar. O sistema atualiza um arquivo de configuração central, e o novo formulário passa a ser exibido para os usuários imediatamente, sem a necessidade de alterar o código-fonte ou fazer um novo deploy da aplicação.
 
-`[INSERIR PRINT DA TELA DE ADMIN AQUI]`
+![atualizar iframe](https://github.com/user-attachments/assets/11f38536-75aa-459c-85f9-d52aa67fce26)
 
 #### Validação de Segurança do Iframe
 Para prevenir a inserção de códigos maliciosos (ataques de XSS), o sistema valida no servidor todo `<iframe>` submetido. Ele verifica se o código contém de fato uma tag `<iframe>` e se sua origem (o atributo `src`) pertence a um dos provedores permitidos (Google Forms e Microsoft Forms). Qualquer código que não passe nessa validação é rejeitado.
