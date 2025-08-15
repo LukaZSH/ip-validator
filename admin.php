@@ -1,4 +1,7 @@
-<?php
+<?php 
+
+require_once __DIR__ . '/src/auth_check.php';
+
 session_start();
 
 // Se a sessão 'loggedin' não existir ou não for true, redireciona para a página de login.

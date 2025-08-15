@@ -1,11 +1,42 @@
 version: '3.8'
+
 services:
+  # Serviço da aplicação web (PHP + Apache)
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: ip-validator_web
-    volumes:
-      - /var/www/ip-validator:/var/www/html
+    build: .
+    container_name: ip-validator-web
     ports:
       - "80:80"
+    volumes:
+      - ./src:/var/www/html/src
+      - ./public:/var/www/html/public
+      - ./config:/var/www/html/config
+      - ./vendor:/var/www/html/vendor
+    # Variáveis de ambiente para a conexão com o DB
+    environment:
+      - DB_HOST=db
+      - DB_NAME=ip_validator_db
+      - DB_USER=validator_user
+      - DB_PASSWORD=super_secret_password
+    # Garante que o serviço web só inicie depois que o DB estiver pronto
+    depends_on:
+      - db
+
+  # Serviço para o MySQL
+  db:
+    image: mysql:8.0
+    container_name: ip-validator-db
+    restart: always
+    # Variáveis de ambiente para configurar o MySQL na primeira inicialização
+    environment:
+      MYSQL_ROOT_PASSWORD: very_strong_root_password
+      MYSQL_DATABASE: ip_validator_db
+      MYSQL_USER: validator_user
+      MYSQL_PASSWORD: super_secret_password
+    volumes:
+      # Volume para persistir os dados do banco de dados
+      - db_data:/var/lib/mysql
+
+# Volume nomeado para persistência dos dados
+volumes:
+  db_data:

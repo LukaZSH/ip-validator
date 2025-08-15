@@ -1,18 +1,17 @@
-<?php
+<?php 
+require_once __DIR__ . '/src/auth_check.php';
 
-session_start();
 
-// 1. Verificação de Segurança
+// erificação de Segurança
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     http_response_code(403);
     echo json_encode(['message' => 'Acesso negado.']);
     exit;
 }
 
-// 2. Define o caminho para o arquivo de configuração
+// Define o caminho para o arquivo de configuração
 $jsonFilePath = __DIR__ . '/config/iframe_config.json';
 
-// --- NOVAS VERIFICAÇÕES DE DEPURAÇÃO ---
 
 // Verifica se o caminho para o arquivo realmente existe
 if (file_exists($jsonFilePath) === false) {
@@ -28,10 +27,8 @@ if (is_writable($jsonFilePath) === false) {
     exit;
 }
 
-// --- FIM DAS VERIFICAÇÕES DE DEPURAÇÃO ---
 
-
-// 3. Verifica se a requisição é do tipo POST
+// Verifica se a requisição é do tipo POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
@@ -39,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($data['iframeCode'])) {
         $iframeCode = $data['iframeCode'];
 
-        // 4. Validação do Iframe
+        // Validação do Iframe
         $dom = new DOMDocument();
         @$dom->loadHTML($iframeCode, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
         $iframes = $dom->getElementsByTagName('iframe');
@@ -73,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
         
-        // 5. Preparação e Salvamento do Arquivo
+        // Preparação e Salvamento do Arquivo
         $newConfig = ['iframeCode' => $iframeCode];
         $jsonData = json_encode($newConfig, JSON_PRETTY_PRINT);
 
