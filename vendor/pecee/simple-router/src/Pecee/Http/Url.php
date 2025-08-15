@@ -67,12 +67,8 @@ class Url implements JsonSerializable
     public function __construct(?string $url)
     {
         $this->originalUrl = $url;
-        $this->parse($url, true);
-    }
 
-    public function parse(?string $url, bool $setOriginalPath = false): self
-    {
-        if ($url !== null) {
+        if ($url !== null && $url !== '/') {
             $data = $this->parseUrl($url);
 
             $this->scheme = $data['scheme'] ?? null;
@@ -83,10 +79,7 @@ class Url implements JsonSerializable
 
             if (isset($data['path']) === true) {
                 $this->setPath($data['path']);
-
-                if ($setOriginalPath === true) {
-                    $this->originalPath = $data['path'];
-                }
+                $this->originalPath = $data['path'];
             }
 
             $this->fragment = $data['fragment'] ?? null;
@@ -95,8 +88,6 @@ class Url implements JsonSerializable
                 $this->setQueryString($data['query']);
             }
         }
-
-        return $this;
     }
 
     /**
@@ -145,15 +136,10 @@ class Url implements JsonSerializable
     /**
      * Get url host
      *
-     * @param bool $includeTrails Prepend // in front of hostname
      * @return string|null
      */
-    public function getHost(bool $includeTrails = false): ?string
+    public function getHost(): ?string
     {
-        if ((string)$this->host !== '' && $includeTrails === true) {
-            return '//' . $this->host;
-        }
-
         return $this->host;
     }
 
@@ -536,12 +522,12 @@ class Url implements JsonSerializable
      */
     public function jsonSerialize(): string
     {
-        return $this->getHost(true) . $this->getRelativeUrl();
+        return $this->getRelativeUrl();
     }
 
     public function __toString(): string
     {
-        return $this->getHost(true) . $this->getRelativeUrl();
+        return $this->getRelativeUrl();
     }
 
 }

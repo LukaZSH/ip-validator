@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d067465d9a99de373ba3093d61eda1d8",
+    "content-hash": "cfa11cda90d655943e4447afb5167f9e",
     "packages": [
         {
             "name": "pecee/simple-router",
-            "version": "5.4.1.7",
+            "version": "5.2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/skipperbent/simple-php-router.git",
-                "reference": "a2843d5b1e037f8b61cc99f27eab52a28bf41dfd"
+                "reference": "fadb783d3c92bb7ce891dd8a814538fcda182422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/skipperbent/simple-php-router/zipball/a2843d5b1e037f8b61cc99f27eab52a28bf41dfd",
-                "reference": "a2843d5b1e037f8b61cc99f27eab52a28bf41dfd",
+                "url": "https://api.github.com/repos/skipperbent/simple-php-router/zipball/fadb783d3c92bb7ce891dd8a814538fcda182422",
+                "reference": "fadb783d3c92bb7ce891dd8a814538fcda182422",
                 "shasum": ""
             },
             "require": {
@@ -67,16 +67,16 @@
                 "issues": "https://github.com/skipperbent/simple-php-router/issues",
                 "source": "https://github.com/skipperbent/simple-php-router/issues"
             },
-            "time": "2023-12-11T21:48:25+00:00"
+            "time": "2023-04-02T01:24:14+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

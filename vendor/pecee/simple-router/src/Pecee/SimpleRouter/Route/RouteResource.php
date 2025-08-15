@@ -3,27 +3,26 @@
 namespace Pecee\SimpleRouter\Route;
 
 use Pecee\Http\Request;
-use Pecee\SimpleRouter\SimpleRouter;
 
 class RouteResource extends LoadableRoute implements IControllerRoute
 {
     protected array $urls = [
-        'index' => '',
-        'create' => 'create',
-        'store' => '',
-        'show' => '',
-        'edit' => 'edit',
-        'update' => '',
+        'index'   => '',
+        'create'  => 'create',
+        'store'   => '',
+        'show'    => '',
+        'edit'    => 'edit',
+        'update'  => '',
         'destroy' => '',
     ];
 
     protected array $methodNames = [
-        'index' => 'index',
-        'create' => 'create',
-        'store' => 'store',
-        'show' => 'show',
-        'edit' => 'edit',
-        'update' => 'update',
+        'index'   => 'index',
+        'create'  => 'create',
+        'store'   => 'store',
+        'show'    => 'show',
+        'edit'    => 'edit',
+        'update'  => 'update',
         'destroy' => 'destroy',
     ];
 
@@ -70,25 +69,11 @@ class RouteResource extends LoadableRoute implements IControllerRoute
     public function findUrl(?string $method = null, $parameters = null, ?string $name = null): string
     {
         $url = array_search($name, $this->names, true);
-
-        $parametersUrl = '';
-
-        if ($parameters !== null && count($parameters) > 0) {
-            $parametersUrl = join('/', $parameters) . '/';
-        }
-
         if ($url !== false) {
-            return rtrim($this->url . $parametersUrl . $this->urls[$url], '/') . '/';
+            return rtrim($this->url . $this->urls[$url], '/') . '/';
         }
 
-        $url = $this->url . $parametersUrl;
-
-        $group = $this->getGroup();
-        if ($group !== null && count($group->getDomains()) !== 0 && SimpleRouter::request()->getHost() !== $group->getDomains()[0]) {
-            $url = '//' . $group->getDomains()[0] . $url;
-        }
-
-        return $url;
+        return $this->url;
     }
 
     protected function call($method): bool
@@ -187,12 +172,12 @@ class RouteResource extends LoadableRoute implements IControllerRoute
         $this->name = $name;
 
         $this->names = [
-            'index' => $this->name . '.index',
-            'create' => $this->name . '.create',
-            'store' => $this->name . '.store',
-            'show' => $this->name . '.show',
-            'edit' => $this->name . '.edit',
-            'update' => $this->name . '.update',
+            'index'   => $this->name . '.index',
+            'create'  => $this->name . '.create',
+            'store'   => $this->name . '.store',
+            'show'    => $this->name . '.show',
+            'edit'    => $this->name . '.edit',
+            'update'  => $this->name . '.update',
             'destroy' => $this->name . '.destroy',
         ];
 

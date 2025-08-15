@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "pecee/simple-router",
-            "version": "5.4.1.7",
-            "version_normalized": "5.4.1.7",
+            "version": "5.2.0.1",
+            "version_normalized": "5.2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/skipperbent/simple-php-router.git",
-                "reference": "a2843d5b1e037f8b61cc99f27eab52a28bf41dfd"
+                "reference": "fadb783d3c92bb7ce891dd8a814538fcda182422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/skipperbent/simple-php-router/zipball/a2843d5b1e037f8b61cc99f27eab52a28bf41dfd",
-                "reference": "a2843d5b1e037f8b61cc99f27eab52a28bf41dfd",
+                "url": "https://api.github.com/repos/skipperbent/simple-php-router/zipball/fadb783d3c92bb7ce891dd8a814538fcda182422",
+                "reference": "fadb783d3c92bb7ce891dd8a814538fcda182422",
                 "shasum": ""
             },
             "require": {
@@ -27,7 +27,7 @@
                 "phpstan/phpstan-strict-rules": "^1",
                 "phpunit/phpunit": "^8"
             },
-            "time": "2023-12-11T21:48:25+00:00",
+            "time": "2023-04-02T01:24:14+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {

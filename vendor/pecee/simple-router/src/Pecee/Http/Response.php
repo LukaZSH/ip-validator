@@ -32,8 +32,6 @@ class Response
      *
      * @param string $url
      * @param ?int $httpCode
-     *
-     * @return never
      */
     public function redirect(string $url, ?int $httpCode = null): void
     {

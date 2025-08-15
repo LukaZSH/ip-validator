@@ -6,7 +6,6 @@ use Pecee\Http\Middleware\IMiddleware;
 use Pecee\Http\Request;
 use Pecee\SimpleRouter\Exceptions\HttpException;
 use Pecee\SimpleRouter\Router;
-use Pecee\SimpleRouter\SimpleRouter;
 
 abstract class LoadableRoute extends Route implements ILoadableRoute
 {
@@ -83,17 +82,14 @@ abstract class LoadableRoute extends Route implements ILoadableRoute
     {
         $this->url = ($url === '/') ? '/' : '/' . trim($url, '/') . '/';
 
-        $parameters = [];
         if (strpos($this->url, $this->paramModifiers[0]) !== false) {
 
             $regex = sprintf(static::PARAMETERS_REGEX_FORMAT, $this->paramModifiers[0], $this->paramOptionalSymbol, $this->paramModifiers[1]);
 
             if ((bool)preg_match_all('/' . $regex . '/u', $this->url, $matches) !== false) {
-                $parameters = array_fill_keys($matches[1], null);
+                $this->parameters = array_fill_keys($matches[1], null);
             }
         }
-
-        $this->parameters = $parameters;
 
         return $this;
     }
@@ -139,6 +135,12 @@ abstract class LoadableRoute extends Route implements ILoadableRoute
     {
         $url = $this->getUrl();
 
+        $group = $this->getGroup();
+
+        if ($group !== null && count($group->getDomains()) !== 0) {
+            $url = '//' . $group->getDomains()[0] . $url;
+        }
+
         /* Create the param string - {parameter} */
         $param1 = $this->paramModifiers[0] . '%s' . $this->paramModifiers[1];
 
@@ -172,15 +174,7 @@ abstract class LoadableRoute extends Route implements ILoadableRoute
             }
         }
 
-        $url = rtrim('/' . ltrim($url, '/'), '/') . '/';
-
-        $group = $this->getGroup();
-
-        if ($group !== null && count($group->getDomains()) !== 0 && SimpleRouter::request()->getHost() !== $group->getDomains()[0]) {
-            $url = '//' . $group->getDomains()[0] . $url;
-        }
-
-        return $url;
+        return rtrim('/' . ltrim($url, '/'), '/') . '/';
     }
 
     /**

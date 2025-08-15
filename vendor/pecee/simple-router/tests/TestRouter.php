@@ -8,16 +8,11 @@ class TestRouter extends \Pecee\SimpleRouter\SimpleRouter
         static::request()->setHost('testhost.com');
     }
 
-    public static function reset(): void
-    {
-        static::$router = null;
-    }
-
     public static function debugNoReset(string $testUrl, string $testMethod = 'get'): void
     {
         $request = static::request();
 
-        $request->setUrl((new \Pecee\Http\Url($testUrl)));
+        $request->setUrl((new \Pecee\Http\Url($testUrl))->setHost('local.unitTest'));
         $request->setMethod($testMethod);
 
         static::start();
