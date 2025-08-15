@@ -1,7 +1,11 @@
 {
+    "require": {
+        "pecee/simple-router": "5.2.0.1"
+    },
     "autoload": {
         "psr-4": {
-            "app\\": "app/"
+            "app\\": "app/",
+            "App\\": "src/"
         }
     }
 }
