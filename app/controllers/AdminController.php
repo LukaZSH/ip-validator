@@ -25,4 +25,9 @@ class AdminController
             die("Erro ao carregar o dashboard: " . $e->getMessage());
         }
     }
+    
+    public function createEventForm()
+    {
+        require_once __DIR__ . '/../views/admin/create.php';
+    }
 }

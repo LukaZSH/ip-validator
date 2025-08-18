@@ -1,7 +1,5 @@
 <?php
 
-require_once 'vendor/autoload.php'; // Autoload das dependências do Composer
-require_once 'app/routes.php'; // Arquivo de rotas
+require_once __DIR__ . '/vendor/autoload.php';
 
-// Inicia o roteador
-Pecee\SimpleRouter\SimpleRouter::start();
+require_once __DIR__ . '/app/routes.php';

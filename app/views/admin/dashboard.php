@@ -15,7 +15,7 @@
             margin: 0;
             padding: 40px;
             color: #333;
-            background-image: url('https://www.unespar.edu.br/campusapucarana/imagens/campus_apucarana.jpg');
+            background-image: url('https://i.postimg.cc/HL8yYDwG/bg-unespar-page.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
