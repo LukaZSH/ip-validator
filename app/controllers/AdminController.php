@@ -68,4 +68,75 @@ class AdminController
             die("Erro ao salvar o evento: " . $e->getMessage());
         }
     }
+
+    public function editEventForm()
+    {
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            header('Location: /admin');
+            exit;
+        }
+
+        try {
+            $db = Database::getInstance()->getConnection();
+            $stmt = $db->prepare("SELECT * FROM events WHERE id = :id");
+            $stmt->execute(['id' => $id]);
+            $event = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$event) {
+                die("Evento não encontrado.");
+            }
+
+            // Passa a variável $event para a view de edição
+            require_once __DIR__ . '/../views/admin/edit.php';
+
+        } catch (\Exception $e) {
+            die("Erro ao carregar evento para edição: " . $e->getMessage());
+        }
+    }
+
+    public function updateEvent()
+    {
+        $id = $_POST['id'];
+        $name = $_POST['name'];
+        $slug = $_POST['slug'];
+        $startTime = $_POST['start_time'];
+        $endTime = $_POST['end_time'];
+        $iframeCode = !empty($_POST['iframe_code']) ? $_POST['iframe_code'] : null;
+
+        // Atualiza o status com base na presença do iframe
+        $status = ($iframeCode === null) ? 'Pendente' : 'Programado';
+
+        try {
+            $db = Database::getInstance()->getConnection();
+
+            $sql = "UPDATE events SET 
+                        name = :name, 
+                        slug = :slug, 
+                        start_time = :start_time, 
+                        end_time = :end_time, 
+                        iframe_code = :iframe_code, 
+                        status = :status 
+                    WHERE id = :id";
+
+            $stmt = $db->prepare($sql);
+
+            $stmt->execute([
+                ':name' => $name,
+                ':slug' => $slug,
+                ':start_time' => $startTime,
+                ':end_time' => $endTime,
+                ':iframe_code' => $iframeCode,
+                ':status' => $status,
+                ':id' => $id
+            ]);
+
+            // Redireciona de volta para o dashboard
+            header('Location: /admin');
+            exit;
+
+        } catch (\Exception $e) {
+            die("Erro ao atualizar o evento: " . $e->getMessage());
+        }
+    }
 }

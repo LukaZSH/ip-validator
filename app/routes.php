@@ -1,5 +1,4 @@
 <?php
-// app/routes.php
 
 use Pecee\SimpleRouter\SimpleRouter as Router;
 
@@ -20,6 +19,13 @@ Router::group(['prefix' => '/admin', 'middleware' => \app\middleware\AuthMiddlew
 
     // Rota para processar o formulário
     Router::post('/events/store', 'app\controllers\AdminController@storeEvent');
+
+    // Rota para MOSTRAR o formulário de edição (ex: /admin/events/edit?id=1)
+    Router::get('/events/edit', 'app\controllers\AdminController@editEventForm');
+
+    // Rota para PROCESSAR a atualização do evento
+    Router::post('/events/update', 'app\controllers\AdminController@updateEvent');
+
 
 });
 
