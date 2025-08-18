@@ -6,6 +6,9 @@ use Pecee\SimpleRouter\SimpleRouter as Router;
 Router::get('/', 'app\controllers\HomeController@showHome');
 Router::post('/validate', 'app\controllers\HomeController@validateIp');
 Router::get('/get-iframe-content', 'app\controllers\HomeController@getIframeContent');
+// Captura o 'slug' da URL e passa para o método do controlador
+Router::get('/evento/{slug}', 'app\controllers\HomeController@showEventPage');
+
 
 
 // Agrupa todas as rotas de admin sob um mesmo "middleware" de verificação de login
@@ -25,7 +28,6 @@ Router::group(['prefix' => '/admin', 'middleware' => \app\middleware\AuthMiddlew
 
     // Rota para PROCESSAR a atualização do evento
     Router::post('/events/update', 'app\controllers\AdminController@updateEvent');
-
 
 });
 
