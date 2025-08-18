@@ -15,7 +15,7 @@
 </head>
 <body>
     <div class="central-container">
-        <img src="https://www.unespar.edu.br/campusapucarana/imagens/logo_unespar_apucarana.png" alt="Logo UNESPAR Apucarana">
+        <img src="https://www.unespar.edu.br/sou-mais-unespar/arquivos/logo-unespar-original.png/@@images/47fd7595-1494-49d0-a856-d1b51cd6b460.png" alt="logo">
         <h1>Sistema de Registro de Presença</h1>
         <p>Para registrar sua presença, por favor, escaneie o QR Code fornecido no local do seu evento.</p>
     </div>
