@@ -23,6 +23,10 @@ class Database
             $this->conn = new PDO("mysql:host={$host};dbname={$db_name}", $username, $password);
             // Configura o PDO para lançar exceções em caso de erro, facilitando o debug
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Força a sessão do MySQL a usar o fuso horário correto.
+            $this->conn->exec("SET time_zone='America/Sao_Paulo';");
+
         } catch (PDOException $e) {
             // Em um ambiente de produção, o ideal seria logar este erro em um arquivo
             die("Erro de Conexão com o Banco de Dados: " . $e->getMessage());
