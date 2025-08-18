@@ -12,13 +12,13 @@ Router::get('/get-iframe-content', 'app\controllers\HomeController@getIframeCont
 // Agrupa todas as rotas de admin sob um mesmo "middleware" de verificação de login
 Router::group(['prefix' => '/admin', 'middleware' => \app\middleware\AuthMiddleware::class], function () {
 
-    // Rota principal do dashboard (ex: /admin)
+    // Rota principal do dashboard
     Router::get('/', 'app\controllers\AdminController@dashboard');
 
-    // Rota para mostrar o formulário de criação de evento (ex: /admin/events/create)
+    // Rota para mostrar o formulário de criação de evento
     Router::get('/events/create', 'app\controllers\AdminController@createEventForm');
 
-    // Rota para processar o formulário (será implementada na próxima etapa)
+    // Rota para processar o formulário
     Router::post('/events/store', 'app\controllers\AdminController@storeEvent');
 
 });
