@@ -15,6 +15,8 @@ Router::group(['prefix' => '/admin', 'middleware' => \app\middleware\AuthMiddlew
     Router::post('/events/store', 'app\controllers\AdminController@storeEvent');
     Router::get('/events/edit', 'app\controllers\AdminController@editEventForm');
     Router::post('/events/update', 'app\controllers\AdminController@updateEvent');
+    Router::post('/events/delete', 'app\controllers\AdminController@deleteEvent');
+    Router::get('/events/qrcode', 'app\controllers\AdminController@generateQrCode');
 });
 
 Router::start();

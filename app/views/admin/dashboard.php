@@ -1,6 +1,4 @@
 <?php
-// app/views/admin/dashboard.php
-
 // A variável $events é fornecida pelo AdminController.php
 ?>
 <!DOCTYPE html>
@@ -28,9 +26,8 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            background-color: rgba(255, 255, 255, 0.95); 
+            background-color: rgba(255, 255, 255, 0.95);
         }
-
         h1 { color: #5a5a5a; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
@@ -41,6 +38,18 @@
         .status-pendente { background-color: #ffc107; }
         .status-programado { background-color: #28a745; }
         .status-concluido { background-color: #6c757d; }
+        .actions-form button {
+            color: red;
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .actions-links a, .actions-form button {
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
@@ -76,8 +85,13 @@
                                     <?= htmlspecialchars($event['status']) ?>
                                 </span>
                             </td>
-                            <td>
-                                <a href="/admin/events/edit?id=<?= $event['id'] ?>">Editar</a>
+                            <td class="actions-links">
+                                <a href="/admin/events/qrcode?id=<?= $event['id'] ?>" target="_blank">QR Code</a> |
+                                <a href="/admin/events/edit?id=<?= $event['id'] ?>">Editar</a> |
+                                <form action="/admin/events/delete" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.');" class="actions-form">
+                                    <input type="hidden" name="id" value="<?= $event['id'] ?>">
+                                    <button type="submit">Excluir</button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>

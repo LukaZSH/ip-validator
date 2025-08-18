@@ -3,6 +3,9 @@ FROM php:8.1-apache
 
 # Instala o pacote tzdata e outras dependências
 RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     tzdata \
     && rm -rf /var/lib/apt/lists/*
 
@@ -10,8 +13,9 @@ RUN apt-get update && apt-get install -y \
 ENV TZ=America/Sao_Paulo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Instala as extensões PHP necessárias para o MySQL
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# Instala as extensões PHP (com a adição de 'gd')
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql
 
 # Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

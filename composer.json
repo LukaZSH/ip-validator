@@ -1,6 +1,7 @@
 {
     "require": {
-        "pecee/simple-router": "5.2.0.1"
+        "pecee/simple-router": "5.2.0.1",
+        "endroid/qr-code": "^4.8"
     },
     "autoload": {
         "psr-4": {
