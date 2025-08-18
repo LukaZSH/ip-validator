@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicionar Novo Evento</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 40px; color: #333; background-image: url('https://www.unespar.edu.br/campusapucarana/imagens/campus_apucarana.jpg'); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; }
+        body { font-family: sans-serif; margin: 0; padding: 40px; color: #333; background-image: url('https://i.postimg.cc/HL8yYDwG/bg-unespar-page.png'); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; }
         .container { max-width: 800px; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); background-color: rgba(255, 255, 255, 0.95); }
         h1 { color: #5a5a5a; }
         .form-group { margin-bottom: 15px; }
