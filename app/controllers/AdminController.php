@@ -1,9 +1,11 @@
 <?php
 
+
 namespace app\controllers;
 
 use App\Config\Database;
 use PDO;
+use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Logo\Logo;
@@ -162,7 +164,8 @@ class AdminController
 
             $qrCode = QrCode::create($url)
                 ->setSize(400)
-                ->setMargin(10);
+                ->setMargin(10)
+                ->setBackgroundColor(new Color(255, 255, 255));
 
             $logoUrl = 'https://www.unespar.edu.br/sou-mais-unespar/arquivos/logo-unespar-original.png/@@images/47fd7595-1494-49d0-a856-d1b51cd6b460.png';
             $logo = Logo::create($logoUrl)
