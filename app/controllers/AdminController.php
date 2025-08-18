@@ -6,6 +6,7 @@ use App\Config\Database;
 use PDO;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Logo\Logo;
 
 class AdminController
 {
@@ -159,21 +160,17 @@ class AdminController
 
             $url = "http://192.168.3.2/evento/" . $event['slug'];
 
-            // Cria o QR Code
             $qrCode = QrCode::create($url)
-                ->setSize(400) // Aumenta o tamanho para acomodar melhor o logo
+                ->setSize(400)
                 ->setMargin(10);
 
-            // Cria o objeto do Logo a partir da URL
             $logoUrl = 'https://www.unespar.edu.br/sou-mais-unespar/arquivos/logo-unespar-original.png/@@images/47fd7595-1494-49d0-a856-d1b51cd6b460.png';
             $logo = Logo::create($logoUrl)
-                ->setResizeToWidth(100); // Define a largura do logo
+                ->setResizeToWidth(100);
 
             $writer = new PngWriter();
-            // Passa tanto o QR Code quanto o Logo para o escritor
             $result = $writer->write($qrCode, $logo);
 
-            // Envia a imagem diretamente para o navegador
             header('Content-Type: '.$result->getMimeType());
             echo $result->getString();
             exit;
