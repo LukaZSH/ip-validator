@@ -1,4 +1,6 @@
 <?php
+// app/views/admin/dashboard.php
+
 // A variável $events é fornecida pelo AdminController.php
 ?>
 <!DOCTYPE html>
@@ -8,8 +10,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Administração - Eventos</title>
     <style>
-        body { font-family: sans-serif; margin: 40px; background-color: #f4f4f9; color: #333; }
-        .container { max-width: 1200px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+            background-image: url('https://www.unespar.edu.br/campusapucarana/imagens/campus_apucarana.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background-color: rgba(255, 255, 255, 0.95); 
+        }
+
         h1 { color: #5a5a5a; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
