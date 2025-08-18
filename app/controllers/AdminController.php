@@ -166,7 +166,8 @@ class AdminController
 
             $logoUrl = 'https://www.unespar.edu.br/sou-mais-unespar/arquivos/logo-unespar-original.png/@@images/47fd7595-1494-49d0-a856-d1b51cd6b460.png';
             $logo = Logo::create($logoUrl)
-                ->setResizeToWidth(100);
+                ->setResizeToWidth(100)
+                ->setPunchoutBackground(true);
 
             $writer = new PngWriter();
             $result = $writer->write($qrCode, $logo);
