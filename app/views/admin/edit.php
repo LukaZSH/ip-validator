@@ -1,5 +1,5 @@
 <?php
-// A variável $event é fornecida pelo AdminController.php
+use App\SessionHelper;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -17,14 +17,19 @@
         textarea { height: 150px; }
         .btn { display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; }
         .btn-secondary { background-color: #6c757d; }
+        .flash-message { padding: 15px; margin-bottom: 20px; border-radius: 5px; color: white; font-weight: bold; }
+        .flash-success { background-color: #28a745; }
+        .flash-error { background-color: #dc3545; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Editar Evento: <?= htmlspecialchars($event['name']) ?></h1>
 
+        <!-- Local para exibir as mensagens de flash -->
+        <?php SessionHelper::displayFlashMessage(); ?>
+        
         <form action="/admin/events/update" method="POST">
-            <!-- Campo oculto para enviar o ID do evento -->
             <input type="hidden" name="id" value="<?= $event['id'] ?>">
 
             <div class="form-group">
@@ -47,7 +52,7 @@
                 <label for="iframe_code">Código do Iframe (Opcional)</label>
                 <textarea id="iframe_code" name="iframe_code"><?= htmlspecialchars($event['iframe_code'] ?? '') ?></textarea>
             </div>
-
+            
             <button type="submit" class="btn">Atualizar Evento</button>
             <a href="/admin" class="btn btn-secondary">Cancelar</a>
         </form>

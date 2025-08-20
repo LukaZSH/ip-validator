@@ -1,3 +1,6 @@
+<?php
+use App\SessionHelper;
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -14,11 +17,19 @@
         textarea { height: 150px; }
         .btn { display: inline-block; padding: 10px 15px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; border: none; cursor: pointer; }
         .btn-secondary { background-color: #6c757d; }
+        /* Estilos para as Flash Messages */
+        .flash-message { padding: 15px; margin-bottom: 20px; border-radius: 5px; color: white; font-weight: bold; }
+        .flash-success { background-color: #28a745; }
+        .flash-error { background-color: #dc3545; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Adicionar Novo Evento</h1>
+
+        <!-- Local para exibir as mensagens de flash -->
+        <?php SessionHelper::displayFlashMessage(); ?>
+
         <form action="/admin/events/store" method="POST">
             <div class="form-group">
                 <label for="name">Nome do Evento</label>
