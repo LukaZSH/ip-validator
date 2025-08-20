@@ -1,5 +1,4 @@
 <?php
-// app/controllers/AdminController.php
 
 namespace app\controllers;
 
@@ -9,10 +8,9 @@ use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Logo\Logo;
-
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 class AdminController
 {
-    // ... (todos os outros métodos como dashboard, storeEvent, etc., permanecem os mesmos) ...
     public function dashboard()
     {
         try {
@@ -144,9 +142,6 @@ class AdminController
         }
     }
 
-    /**
-     * Gera e exibe uma imagem de QR Code com o logo da UNESPAR a partir de um arquivo local.
-     */
     public function generateQrCode()
     {
         $id = $_GET['id'] ?? null;
@@ -167,11 +162,10 @@ class AdminController
             $url = "http://192.168.3.2/evento/" . $event['slug'];
 
             $qrCode = QrCode::create($url)
+                ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
                 ->setSize(400)
                 ->setMargin(10)
-                ->setBackgroundColor(new Color(255, 255, 255));
 
-            // Define o caminho para o arquivo do logo dentro do projeto
             $logoPath = __DIR__ . '/../../Logo/logo-unespar.jpeg';
             $logo = Logo::create($logoPath)
                 ->setResizeToWidth(100);
