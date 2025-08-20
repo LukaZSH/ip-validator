@@ -164,7 +164,7 @@ class AdminController
             $qrCode = QrCode::create($url)
                 ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
                 ->setSize(400)
-                ->setMargin(10)
+                ->setMargin(10);
 
             $logoPath = __DIR__ . '/../../Logo/logo-unespar.jpeg';
             $logo = Logo::create($logoPath)
