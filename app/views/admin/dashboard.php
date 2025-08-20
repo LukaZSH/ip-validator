@@ -1,33 +1,15 @@
 <?php
-// A variável $events é fornecida pelo AdminController.php
+use App\SessionHelper;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF--8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Administração - Eventos</title>
     <style>
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 40px;
-            color: #333;
-            background-image: url('https://i.postimg.cc/HL8yYDwG/bg-unespar-page.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            background-color: rgba(255, 255, 255, 0.95);
-        }
+        body { font-family: sans-serif; margin: 0; padding: 40px; color: #333; background-image: url('https://i.postimg.cc/HL8yYDwG/bg-unespar-page.png'); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; }
+        .container { max-width: 1200px; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); background-color: rgba(255, 255, 255, 0.95); }
         h1 { color: #5a5a5a; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
@@ -38,22 +20,19 @@
         .status-pendente { background-color: #ffc107; }
         .status-programado { background-color: #28a745; }
         .status-concluido { background-color: #6c757d; }
-        .actions-form button {
-            color: red;
-            background: none;
-            border: none;
-            padding: 0;
-            font: inherit;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-        .actions-links a, .actions-form button {
-            margin: 0 5px;
-        }
+        .actions-form button { color: red; background: none; border: none; padding: 0; font: inherit; cursor: pointer; text-decoration: underline; }
+        .actions-links a, .actions-form button { margin: 0 5px; }
+        .flash-message { padding: 15px; margin-bottom: 20px; border-radius: 5px; color: white; font-weight: bold; }
+        .flash-success { background-color: #28a745; }
+        .flash-error { background-color: #dc3545; }
     </style>
 </head>
 <body>
     <div class="container">
+        
+        <!-- Local para exibir as mensagens de flash -->
+        <?php SessionHelper::displayFlashMessage(); ?>
+
         <h1>Dashboard de Eventos</h1>
         <a href="/admin/events/create" class="btn">Adicionar Novo Evento</a>
 
