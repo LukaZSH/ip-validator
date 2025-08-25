@@ -3,9 +3,13 @@ parameters:
     paths:
         - app
         - src
-    ignoreErrors:
-        - '#Variable \$\w+ might not be defined\.#'
+    
+    # Excluir views da análise para evitar problemas com variáveis de controller
     excludePaths:
         - app/views/*
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
+    
+    ignoreErrors:
+        -
+            identifier: missingType.iterableValue
+        -
+            identifier: missingType.generics
