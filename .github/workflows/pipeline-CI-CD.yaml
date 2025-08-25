@@ -82,7 +82,7 @@ jobs:
       - name: Executar teste de conexão com o banco de dados
         env:
           DB_HOST: 127.0.0.1
-          DB_PORT: ${{ services.mysql.ports['3306'] }}
+          DB_PORT: 3306
           DB_NAME: test_db
           DB_USER: test_user
           DB_PASSWORD: test_password
