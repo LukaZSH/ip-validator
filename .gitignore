@@ -1,0 +1,12 @@
+.DS_Store
+Thumbs.db
+
+/vendor/
+
+.env
+.env.local
+.env.*.local
+
+*.log
+/tmp/
+/cache/

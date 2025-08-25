@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'cb197028859bbfd268b6c68045a620d9e8f25b57',
+        'reference' => 'e7c439e4ea41dede7b1e2fb20c4355abf82b170f',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'cb197028859bbfd268b6c68045a620d9e8f25b57',
+            'reference' => 'e7c439e4ea41dede7b1e2fb20c4355abf82b170f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -54,6 +54,15 @@
             'install_path' => __DIR__ . '/../pecee/simple-router',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'phpstan/phpstan' => array(
+            'pretty_version' => '1.12.28',
+            'version' => '1.12.28.0',
+            'reference' => 'fcf8b71aeab4e1a1131d1783cef97b23a51b87a9',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpstan/phpstan',
+            'aliases' => array(),
+            'dev_requirement' => true,
         ),
     ),
 );
