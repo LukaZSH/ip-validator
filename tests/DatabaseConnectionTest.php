@@ -4,7 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Config\Database;
 
-echo "A iniciar o teste de conexão com o banco de dados...\n";
+echo "Iniciar o teste de conexão com o banco de dados...\n";
 
 try {
     $db = Database::getInstance()->getConnection();

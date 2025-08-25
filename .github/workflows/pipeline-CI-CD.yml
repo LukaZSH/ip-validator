@@ -1,0 +1,131 @@
+name: CI/CD - Testar, Construir e Publicar Imagem Docker
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+      - 'Logo/**'
+      - '**.md'
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  # ===================================================================
+  # JOB 1: ANÁLISE ESTÁTICA - Verifica a qualidade do código sem o executar
+  # ===================================================================
+  static_analysis:
+    name: Análise Estática do Código
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Instalar dependências do Composer
+        run: composer install --prefer-dist --no-progress
+
+      - name: Validar ficheiros do Composer
+        run: composer validate --strict
+
+      - name: Verificar vulnerabilidades de dependências (Audit)
+        run: composer audit
+
+      - name: Verificar sintaxe do PHP (Lint)
+        run: find . -type f -name "*.php" -print0 | xargs -0 -n1 -P4 php -l
+
+      - name: Rodar análise estática de bugs (PHPStan)
+        run: vendor/bin/phpstan analyse
+
+  # ========================================================================
+  # JOB 2: TESTES DE INTEGRAÇÃO - Verifica se a aplicação funciona com o DB
+  # ========================================================================
+  integration_tests:
+    name: Testes de Integração e Scan da Imagem
+    runs-on: ubuntu-latest
+    needs: static_analysis
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root_password_test
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping -h localhost -p${{ env.DB_PASSWORD }}"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: pdo, pdo_mysql
+
+      - name: Instalar dependências do Composer
+        run: composer install --prefer-dist --no-progress
+
+      - name: Executar teste de conexão com o banco de dados
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DB_NAME: test_db
+          DB_USER: test_user
+          DB_PASSWORD: test_password
+        run: php tests/DatabaseConnectionTest.php
+
+      - name: Construir a imagem Docker para scan
+        run: docker build -t lukazsh/ip-validator-test:${{ github.sha }} .
+
+      - name: Instalar Trivy para scan de vulnerabilidades
+        uses: aquasecurity/trivy-action@master
+        with:
+          install-type: 'binary'
+          version: '0.44.0'
+
+      - name: Escanear imagem com Trivy por vulnerabilidades
+        run: trivy image --exit-code 0 --severity HIGH,CRITICAL lukazsh/ip-validator-test:${{ github.sha }}
+
+  # ===================================================================
+  # JOB 3: PUBLICAÇÃO - Envia a imagem final para o registo
+  # ===================================================================
+
+  publish_image:
+    name: Publicar Imagem no GHCR
+    runs-on: ubuntu-latest
+    needs: [static_analysis, integration_tests]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Login no GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Construir e Enviar a Imagem Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/lukazsh/ip-validator:latest
+            ghcr.io/lukazsh/ip-validator:${{ github.sha }}
