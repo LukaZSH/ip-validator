@@ -1,6 +1,24 @@
 {
+    "name": "lukazsh/ip-validator",
+    "description": "A PHP application for validating and analyzing IP addresses with QR code generation",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "LukaZSH"
+        }
+    ],
+    "keywords": [
+        "ip",
+        "validator",
+        "ipv4",
+        "ipv6",
+        "qr-code",
+        "network"
+    ],
     "require": {
-        "pecee/simple-router": "5.2.0.1",
+        "php": ">=8.1",
+        "pecee/simple-router": "^5.2",
         "endroid/qr-code": "^4.8"
     },
     "require-dev": {
@@ -11,5 +29,11 @@
             "app\\": "app/",
             "App\\": "src/"
         }
-    }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
