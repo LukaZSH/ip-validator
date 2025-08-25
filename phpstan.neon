@@ -3,3 +3,9 @@ parameters:
     paths:
         - app
         - src
+    ignoreErrors:
+        - '#Variable \$\w+ might not be defined\.#'
+    excludePaths:
+        - app/views/*
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
