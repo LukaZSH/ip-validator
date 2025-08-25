@@ -1,21 +1,26 @@
 # Usa a imagem oficial do PHP com Apache
 FROM php:8.1-apache
 
-# Instala o pacote tzdata e outras dependências
+# Instala dependências necessárias (incluindo git, zip, unzip para o Composer)
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
+    libzip-dev \
     tzdata \
+    git \
+    unzip \
+    zip \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Define o fuso horário para o container
 ENV TZ=America/Sao_Paulo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Instala as extensões PHP (com a adição de 'gd')
+# Instala as extensões PHP (com a adição de 'gd' e 'zip')
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql
+    && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql zip
 
 # Instala o Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -32,5 +37,5 @@ COPY . .
 # Dá permissão para o Apache escrever nos arquivos, se necessário
 RUN chown -R www-data:www-data /var/www/html
 
-# Instala as dependências do Composer
-RUN composer install
+# Instala as dependências do Composer (apenas produção para otimizar)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
