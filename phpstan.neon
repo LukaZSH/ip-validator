@@ -7,9 +7,3 @@ parameters:
     # Excluir views da análise para evitar problemas com variáveis de controller
     excludePaths:
         - app/views/*
-    
-    ignoreErrors:
-        -
-            identifier: missingType.iterableValue
-        -
-            identifier: missingType.generics
