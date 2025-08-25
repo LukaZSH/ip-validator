@@ -9,12 +9,12 @@ on:
       - 'Logo/**'
       - '**.md'
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master ]
 
 jobs:
-  # ===================================================================
+  # ========================================================================
   # JOB 1: ANÁLISE ESTÁTICA - Verifica a qualidade do código sem o executar
-  # ===================================================================
+  # =======================================================================
   static_analysis:
     name: Análise Estática do Código
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
 
   # ========================================================================
   # JOB 2: TESTES DE INTEGRAÇÃO - Verifica se a aplicação funciona com o DB
-  # ========================================================================
+  # =======================================================================
   integration_tests:
     name: Testes de Integração e Scan da Imagem
     runs-on: ubuntu-latest
@@ -53,6 +53,7 @@ jobs:
     services:
       mysql:
         image: mysql:8.0
+      
         env:
           MYSQL_ROOT_PASSWORD: root_password_test
           MYSQL_DATABASE: test_db
@@ -61,7 +62,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd "mysqladmin ping -h localhost -p${{ env.DB_PASSWORD }}"
+          --health-cmd "mysqladmin ping -h localhost -ptest_password"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -103,7 +104,6 @@ jobs:
   # ===================================================================
   # JOB 3: PUBLICAÇÃO - Envia a imagem final para o registo
   # ===================================================================
-
   publish_image:
     name: Publicar Imagem no GHCR
     runs-on: ubuntu-latest
