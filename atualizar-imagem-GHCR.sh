@@ -1,45 +1,25 @@
 #!/bin/bash
 
-echo "Iniciando atualização da aplicação..."
+set -e
 
-if [ ! -f "docker-compose.yml" ]; then
-    echo "Arquivo docker-compose.yml não encontrado!"
-    exit 1
-fi
+echo "Iniciando a atualização da aplicação ip-validator..."
 
-DOCKER_CMD="docker"
-COMPOSE_CMD="docker compose"
+echo "Atualizar o repositório com 'git pull'..."
+git pull origin master
 
-if ! docker ps >/dev/null 2>&1; then
-    echo "Usando sudo para comandos Docker..."
-    DOCKER_CMD="sudo docker"
-    COMPOSE_CMD="sudo docker compose"
-fi
 
-echo "Parando containers..."
-$COMPOSE_CMD down
+echo "Puxando a imagem mais recente do GHCR..."
+sudo docker-compose pull
 
-echo "Removendo imagem antiga..."
-$DOCKER_CMD rmi ghcr.io/lukazsh/ip-validator:latest 2>/dev/null || true
+echo "Subindo os containers com a nova versão..."
+sudo docker-compose up -d
 
-echo "Baixando imagem mais recente..."
-$DOCKER_CMD pull ghcr.io/lukazsh/ip-validator:latest
 
-if [ $? -ne 0 ]; then
-    echo "Erro ao baixar imagem!"
-    exit 1
-fi
+echo "A limpar imagens Docker antigas..."
+sudo docker image prune -f
 
-echo "Iniciando containers..."
-$COMPOSE_CMD up -d
-
-if [ $? -eq 0 ]; then
-    echo "Aplicação atualizada com sucesso!"
-    echo "Acesse: http://192.168.3.2"
-    echo ""
-    echo "Status dos containers:"
-    $COMPOSE_CMD ps
-else
-    echo "Erro ao iniciar containers!"
-    exit 1
-fi
+echo "Aplicação atualizada com sucesso!"
+echo "Acesse: http://192.168.3.2"
+echo ""
+echo "Status atual dos contentores:"
+sudo docker-compose ps
