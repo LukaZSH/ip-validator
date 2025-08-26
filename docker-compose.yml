@@ -1,14 +1,11 @@
 version: '3.8'
 
 services:
-  # Serviço da aplicação web (PHP + Apache)
   web:
-    build: .
+    image: ghcr.io/lukazsh/ip-validator:latest
     container_name: ip-validator-web
     ports:
       - "80:80"
-    volumes:
-      - ./:/var/www/html
     environment:
       - DB_HOST=db
       - DB_NAME=ip_validator_db
@@ -17,8 +14,8 @@ services:
       - TZ=America/Sao_Paulo
     depends_on:
       - db
+    restart: unless-stoppedw
 
-  # Serviço para o banco de dados MySQL
   db:
     image: mysql:8.0
     container_name: ip-validator-db
