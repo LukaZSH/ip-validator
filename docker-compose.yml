@@ -4,28 +4,62 @@ services:
     container_name: ip-validator-web
     ports:
       - "80:80"
+    env_file: .env
     environment:
       - DB_HOST=db
-      - DB_NAME=ip_validator_db
-      - DB_USER=validator_user
-      - DB_PASSWORD=super_secret_password
       - TZ=America/Sao_Paulo
     depends_on:
       - db
     restart: unless-stopped
-
+    networks:
+      - app-net
   db:
     image: mysql:8.0
     container_name: ip-validator-db
     restart: always
+    env_file: .env
     environment:
-      - MYSQL_ROOT_PASSWORD=very_strong_root_password
-      - MYSQL_DATABASE=ip_validator_db
-      - MYSQL_USER=validator_user
-      - MYSQL_PASSWORD=super_secret_password
       - TZ=America/Sao_Paulo
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - app-net
+  loki:
+    image: grafana/loki:2.9.2
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  promtail:
+    image: grafana/promtail:2.9.2
+    container_name: promtail
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./monitoring/promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  grafana:
+    image: grafana/grafana:10.1.1
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana/loki.yml:/etc/grafana/provisioning/datasources/loki.yml
+    env_file: .env
+    restart: unless-stopped
+    networks:
+      - app-net
 
 volumes:
   db_data:
+
+networks:
+  app-net:
+    driver: bridge
