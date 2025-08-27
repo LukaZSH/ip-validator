@@ -39,7 +39,7 @@ services:
     container_name: promtail
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./monitoring/promtail-config.yml:/etc/promtail/config.yml
+      - ./monitoramento/promtail-config.yml:/etc/promtail/config.yml
     command: -config.file=/etc/promtail/config.yml
     restart: unless-stopped
     networks:
@@ -51,7 +51,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./monitoring/grafana/loki.yml:/etc/grafana/provisioning/datasources/loki.yml
+      - ./monitoramento/grafana/loki.yml:/etc/grafana/provisioning/datasources/loki.yml
     env_file: .env
     restart: unless-stopped
     networks:
