@@ -20,8 +20,31 @@ scrape_configs:
       - source_labels: ['__meta_docker_container_name']
         regex: '/promtail'
         action: drop
+      
       - source_labels: ['__meta_docker_container_name']
         regex: '/(.*)'
         target_label: 'container'
+        replacement: '${1}'
+      
       - source_labels: ['__meta_docker_container_image_name']
         target_label: 'image'
+      
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'job'
+        replacement: '${1}'
+      
+      - target_label: 'host'
+        replacement: 'server-ti'
+    
+    pipeline_stages:
+      - docker: {}
+      
+      - timestamp:
+          source: time
+          format: RFC3339Nano
+      
+      - json:
+          expressions:
+            level: level
+            message: message
