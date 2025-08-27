@@ -22,5 +22,5 @@ sudo docker-compose up -d
 echo "Aplicação atualizada com sucesso!"
 echo "Acesse: http://192.168.3.2"
 echo ""
-echo "Status atual dos contentores:"
+echo "Status atual dos containers:"
 sudo docker-compose ps
