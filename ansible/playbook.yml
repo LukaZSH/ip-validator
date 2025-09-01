@@ -1,0 +1,64 @@
+- name: Setup do Ubuntu/Docker
+  hosts: production
+  become: true
+  tasks:
+    - name: Update apt package cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install prerequisite packages
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+          - git
+        state: present
+
+    - name: Create directory for Docker GPG key
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Add Docker GPG key
+      ansible.builtin.shell:
+        cmd: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        creates: /etc/apt/keyrings/docker.gpg
+
+    - name: Add Docker repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+        filename: docker
+
+    - name: Install Docker Engine and plugins
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: yes
+
+    - name: Add user to docker group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Clone project repository
+      ansible.builtin.git:
+        repo: https://github.com/LukaZSH/ip-validator.git
+        dest: "{{ project_path }}"
+      become_user: "{{ ansible_user }}"
+
+    - name: Start application containers
+      community.docker.docker_compose_v2:
+        project_src: "{{ project_path }}"
+        state: present
+        pull: always
+      become_user: "{{ ansible_user }}"

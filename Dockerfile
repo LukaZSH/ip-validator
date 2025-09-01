@@ -27,15 +27,20 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Habilita o mod_rewrite do Apache para URLs amigáveis
 RUN a2enmod rewrite
+RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
 # Define o diretório de trabalho
 WORKDIR /var/www/html
 
-# Copia os arquivos do projeto para o container
+# Copia os arquivos de dependência do Composer primeiro para aproveitar o cache do Docker
+COPY composer.json composer.lock ./
+
+# Instala as dependências do Composer (apenas produção para otimizar)
+# Isso cria uma camada de cache que só é invalidada quando o composer.lock muda
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Agora copia o resto dos arquivos da aplicação
 COPY . .
 
 # Dá permissão para o Apache escrever nos arquivos, se necessário
 RUN chown -R www-data:www-data /var/www/html
-
-# Instala as dependências do Composer (apenas produção para otimizar)
-RUN composer install --no-dev --optimize-autoloader --no-interaction

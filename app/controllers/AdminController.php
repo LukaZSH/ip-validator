@@ -205,7 +205,7 @@ class AdminController
                 ->setSize(400)
                 ->setMargin(10)
                 ->setBackgroundColor(new Color(255, 255, 255));
-            $logoPath = __DIR__ . '/../../Logo/logo-unespar.jpeg';
+            $logoPath = __DIR__ . '/../../../public/Logo/logo-unespar.jpeg';
             $logo = Logo::create($logoPath)->setResizeToWidth(100);
             $writer = new PngWriter();
             $result = $writer->write($qrCode, $logo);
