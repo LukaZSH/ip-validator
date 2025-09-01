@@ -26,16 +26,19 @@ class AuthController
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($_POST['password'], $user['password'])) {
-                SessionHelper::regenerateId();
-                SessionHelper::set('user_id', $user['id']);
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $user['id'];
                 header('Location: /admin');
                 exit;
             } else {
+                
                 SessionHelper::setFlashMessage('error', 'Usuário ou senha inválidos.');
                 header('Location: /login');
                 exit;
             }
-        } catch (\Exception $e) {
+        } catch (
+Exception $e) {
+            
             SessionHelper::setFlashMessage('error', 'Ocorreu um erro no servidor. Tente novamente.');
             header('Location: /login');
             exit;
@@ -44,7 +47,11 @@ class AuthController
 
     public function logout()
     {
-        SessionHelper::destroy();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        session_unset();
+        session_destroy();
         header('Location: /login');
         exit;
     }

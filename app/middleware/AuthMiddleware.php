@@ -5,16 +5,17 @@ namespace app\middleware;
 use Pecee\Http\Middleware\IMiddleware;
 use Pecee\Http\Request;
 use Pecee\SimpleRouter\SimpleRouter;
-use App\SessionHelper;
 
 class AuthMiddleware implements IMiddleware
 {
     public function handle(Request $request): void
     {
-        // A sessão já é iniciada em public/index.php
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
-        if (SessionHelper::get('user_id') === null) {
-            SimpleRouter::response()->redirect(url('login'));
+        if (!isset($_SESSION['user_id'])) {
+            SimpleRouter::response()->redirect(SimpleRouter::getUrl('login'));
         }
     }
 }

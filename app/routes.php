@@ -5,7 +5,7 @@ use Pecee\SimpleRouter\SimpleRouter as Router;
 // Rotas de Autenticação
 Router::get('/login', 'app\controllers\AuthController@showLoginForm')->setName('login');
 Router::post('/login', 'app\controllers\AuthController@login');
-Router::get('/logout', 'app\controllers\AuthController@logout')->setName('logout');
+Router::get('/logout', 'app\controllers\AuthController@logout', ['as' => 'logout']);
 
 // Rota da página inicial
 Router::get('/', 'app\controllers\HomeController@showHome');
