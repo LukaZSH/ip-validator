@@ -14,12 +14,20 @@ TAG="latest"
 # Caminho para o arquivo docker-compose.yml
 COMPOSE_FILE_PATH="/var/www/ip-validator/docker-compose.yml"
 
+TOKEN_FILE="$HOME/.gh_token"
+
 # --- Lógica ---
 
 echo "\n[+] Logando no GitHub Container Registry..."
-# É esperado que o Personal Access Token (PAT) seja passado via stdin
-# Exemplo de uso: cat ~/gh_token.txt | ./atualizar-imagem-GHCR.sh
-cat - | docker login ghcr.io -u $USERNAME --password-stdin
+
+if [ ! -f "$TOKEN_FILE" ]; then
+    echo "\n[!] Arquivo de token não encontrado em '$TOKEN_FILE'."
+    echo "    Crie este arquivo e insira seu Personal Access Token (PAT) do GitHub nele."
+    exit 1
+fi
+
+# Lê o token do arquivo e passa para o docker login
+cat $TOKEN_FILE | docker login ghcr.io -u $USERNAME --password-stdin
 
 if [ $? -ne 0 ]; then
     echo "\n[!] Falha no login do Docker. Verifique seu token e permissões."
