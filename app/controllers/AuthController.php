@@ -36,8 +36,7 @@ class AuthController
                 header('Location: /login');
                 exit;
             }
-        } catch (
-Exception $e) {
+        } catch (\Exception $e) {
             
             SessionHelper::setFlashMessage('error', 'Ocorreu um erro no servidor. Tente novamente.');
             header('Location: /login');
