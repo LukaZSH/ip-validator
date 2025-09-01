@@ -1,40 +1,83 @@
-# Projeto - Autenticador de IP via QRcode
-Projeto desenvolvido durante meu estágio no departamento de TI da UNESPAR - Apucarana.
+<p align="right">
+  <a href="README-en.md" title="English"><img src="https://flagcdn.com/w40/us.png" width="40" alt="English"></a>
+  &nbsp;&nbsp;
+  <a href="README.md" title="Português"><img src="https://flagcdn.com/w40/br.png" width="30" alt="Português"></a>
+</p>
 
-Essa aplicação tem como principal objetivo permitir que apenas as pessoas conectadas ao Wi-Fi do campus de Apucarana consigam acessar os formulários de validação de presença. Esses formulários são normalmente distribuídos via QR Code ao final de eventos e palestras para a obtenção de Certificados de Participação, e a ferramenta visa restringir o acesso de pessoas que não estão fisicamente presentes no evento.
+# 🚀 Sistema de Validação de Presença v2.0
 
-## Partes do projeto
+<p align="center">
+  <img src="https://go-skill-icons.vercel.app/api/icons?i=php,apache,mysql,docker,bash,linux,ubuntu,git,githubactions,grafana,ansible" />
+</p>
 
-### 1º parte - Lógica de Validação de Rede
-O núcleo da aplicação utiliza PHP para identificar o endereço de IP do usuário que está fazendo o acesso. Em seguida, o sistema compara este IP com a faixa de IPs designada para a rede Wi-Fi do campus da UNESPAR (de `192.168.3.47` até `192.168.8.255`). Caso o IP do usuário esteja dentro dessa faixa, o acesso ao formulário de presença é concedido. Caso contrário, o acesso é bloqueado.
+## 📄 Visão Geral do Projeto
 
-### 2º parte - Hospedagem e Testes
-Inicialmente testado em um ambiente `localhost` com XAMPP, o projeto foi migrado para um servidor dedicado (Ubuntu Server) para simular um ambiente de produção real. O deployment no servidor é gerenciado com Docker, garantindo que a aplicação funcione em um contêiner isolado com todas as suas dependências, o que facilita a portabilidade e a manutenção.
+O **Sistema de Validação de Presença** é uma aplicação web robusta desenvolvida para modernizar e proteger o processo de registro de presença em eventos acadêmicos no campus da UNESPAR - Apucarana. O projeto evoluiu de um simples script de validação de IP para uma solução completa, demonstrando um fluxo de trabalho DevOps abrangente, desde a infraestrutura como código até o monitoramento em tempo real.
 
-![Servidor caseiro](https://github.com/user-attachments/assets/7268088c-2e2b-4425-b211-08b25ca4a288)
+A aplicação resolve problemas críticos como o registro manual ineficiente, fraudes de presença e a dependência da equipe de TI para gerenciamento de eventos.
 
-### 3º parte - Melhorias e Funcionalidades Adicionais
+## 🛠️ Pilares e Tecnologias Aplicadas
 
-A versão inicial do projeto foi aprimorada com funcionalidades cruciais para torná-la uma ferramenta robusta, segura e de fácil manutenção pela equipe de TI.
+| Pilar Chave | Ferramentas e Conceitos Aplicados |
+|---|---|
+| **Containerização** | **Docker e Docker Compose** para empacotar a aplicação PHP, o banco de dados MySQL e a stack de monitoramento, garantindo um ambiente consistente e isolado. |
+| **CI/CD (Integração e Deploy Contínuo)** | **GitHub Actions** para automatizar a análise estática (`PHPStan`), auditoria de segurança (`Composer`), testes de integração, build e publicação da imagem no GitHub Container Registry (GHCR). |
+| **Observabilidade** | **Stack PLG (Promtail, Loki, Grafana)** para coleta, armazenamento e visualização de logs em tempo real, permitindo o diagnóstico instantâneo de problemas. |
+| **Infraestrutura como Código (IaC)** | **Ansible** para automatizar a configuração de um servidor Ubuntu do zero, instalando Docker, configurando usuários e clonando o projeto, tornando a infraestrutura totalmente reproduzível. |
+| **Segurança** | Implementação de múltiplas camadas de validação (IP, horário do evento, trava anti-fraude), painel administrativo com login seguro e validação de `<iframe>` para prevenir XSS. |
 
-#### Painel Administrativo com Login Seguro
-Foi desenvolvido um painel administrativo protegido por um sistema de login e senha. Apenas usuários autenticados (a equipe de TI) podem acessar a área de gerenciamento, garantindo que somente pessoas autorizadas possam realizar alterações no sistema.
+---
 
-![login](https://github.com/user-attachments/assets/379872e9-a659-411f-a7e1-4f6101f24c77)
+## 🏛️ Arquitetura da Solução
 
+A aplicação é orquestrada pelo Docker Compose e dividida nos seguintes serviços que se comunicam em uma rede interna (`app-net`):
+- **`web`**: O contêiner principal com a aplicação PHP rodando em um servidor Apache.
+- **`db`**: O banco de dados MySQL 8.0 para persistência de dados de usuários, eventos e presenças.
+- **`loki`**, **`promtail`**, **`grafana`**: A stack de observabilidade para monitoramento de logs.
 
-#### Atualização Dinâmica do Formulário
-Através do painel de admin, é possível atualizar o formulário de presença de forma dinâmica. O administrador pode simplesmente colar o novo código `<iframe>` (do Google Forms ou Microsoft Forms) em uma caixa de texto e salvar. O sistema atualiza um arquivo de configuração central, e o novo formulário passa a ser exibido para os usuários imediatamente, sem a necessidade de alterar o código-fonte ou fazer um novo deploy da aplicação.
+O ambiente de produção é hospedado em um servidor dedicado no campus.
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7268088c-2e2b-4425-b211-08b25ca4a288" alt="Servidor caseiro" width="600"/>
+</p>
 
-![atualizar iframe](https://github.com/user-attachments/assets/11f38536-75aa-459c-85f9-d52aa67fce26)
+---
 
-#### Validação de Segurança do Iframe
-Para prevenir a inserção de códigos maliciosos (ataques de XSS), o sistema valida no servidor todo `<iframe>` submetido. Ele verifica se o código contém de fato uma tag `<iframe>` e se sua origem (o atributo `src`) pertence a um dos provedores permitidos (Google Forms e Microsoft Forms). Qualquer código que não passe nessa validação é rejeitado.
+## ✨ Funcionalidades Principais (Showcase)
 
-#### URL Amigável com DNS Local
-Para profissionalizar o acesso, o antigo endereço baseado em IP (`http://192.168.3.2/ip-validator/`) foi substituído por um nome de domínio local e amigável (`http://presenca.unespar.local/ip-validator/`). Isso foi alcançado através da configuração de um "Host Override" no servidor DNS da rede (pfSense), tornando o acesso mais fácil de lembrar e compartilhar.
+### Painel Administrativo Seguro
+Um painel de gerenciamento protegido por login permite que a equipe de TI gerencie todo o ciclo de vida dos eventos (criar, editar, excluir) sem precisar intervir no código.
 
-### Tecnologias Utilizadas no Projeto
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/379872e9-a659-411f-a7e1-4f6101f24c77" alt="Tela de Login" width="600"/>
+</p>
 
-<a href="https://skillicons.dev">
-<img src="https://skillicons.dev/icons?i=git,php,vscode,bash,linux,ubuntu,docker,html,css,javascript"/>
+O administrador pode atualizar dinamicamente o formulário de presença (Google Forms, etc.) e gerar QR Codes para o evento com um único clique.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/11f38536-75aa-459c-85f9-d52aa67fce26" alt="Atualização de Iframe" width="600"/>
+</p>
+
+### Fluxo de Validação do Aluno
+Para garantir a integridade do registro, o aluno passa por uma cadeia de validações:
+1.  **Validação de IP**: Verifica se o acesso vem da rede Wi-Fi do campus.
+2.  **Validação de Horário**: Confere se o registro está sendo feito dentro da janela de tempo do evento.
+3.  **Trava Anti-Fraude**: Impede que um mesmo aluno registre presença mais de uma vez no mesmo dia.
+
+---
+
+## 🔄 Fluxo de Trabalho DevOps
+
+### Pipeline de CI/CD com GitHub Actions
+A pipeline é acionada a cada push na branch `main` e executa uma série de verificações para garantir a qualidade e a segurança do código antes de publicar a nova versão da imagem Docker.
+
+*Espaço para imagem da Pipeline de CI/CD*
+`![Pipeline de CI/CD]()`
+
+### Monitoramento com Grafana
+A stack de observabilidade permite visualizar e pesquisar os logs de todos os contêineres em tempo real através de um dashboard no Grafana, essencial para a depuração durante os eventos.
+
+*Espaço para imagem do Grafana*
+`![Dashboard Grafana]()`
+
+### Infraestrutura como Código com Ansible
+A configuração do servidor de produção é totalmente automatizada com Ansible. O playbook prepara um servidor Ubuntu limpo, instala todas as dependências e faz o deploy da aplicação.

@@ -1,16 +1,18 @@
 services:
   web:
-    image: ghcr.io/lukazsh/ip-validator:latest
-    container_name: ip-validator-web
+    build: .
     ports:
       - "80:80"
-    env_file: .env
+    volumes:
+      - .:/var/www/html
     environment:
-      - DB_HOST=db
-      - TZ=America/Sao_Paulo
+      DB_HOST: db
+      DB_NAME: ip_validator
+      DB_USER: user
+      DB_PASSWORD: password
     depends_on:
-      - db
-    restart: unless-stopped
+      db:
+        condition: service_healthy
     networks:
       - app-net
   db:
