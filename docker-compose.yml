@@ -11,8 +11,7 @@ services:
       DB_USER: user
       DB_PASSWORD: password
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     networks:
       - app-net
   db:
