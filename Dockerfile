@@ -41,6 +41,8 @@ RUN <<EOF > /etc/apache2/sites-available/000-default.conf
 </VirtualHost>
 EOF
 
+RUN a2ensite 000-default.conf
+
 WORKDIR /var/www/html
 
 COPY --from=builder /app/vendor/ /var/www/html/vendor/
