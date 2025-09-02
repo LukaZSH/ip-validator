@@ -21,7 +21,7 @@ class HomeController
     {
         $userIp = $_SERVER['REMOTE_ADDR'] === '::1' ? '127.0.0.1' : $_SERVER['REMOTE_ADDR'];
         if (!$this->isIPInRange($userIp, '192.168.3.47', '192.168.8.255')) {
-            die("Acesso negado. Você precisa estar conectado à rede da UNESPAR.");
+            die("Acesso negado. Seu IP (" . $userIp . ") não está na faixa permitida. Você precisa estar conectado à rede da UNESPAR.");
         }
 
         try {
