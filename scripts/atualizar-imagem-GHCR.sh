@@ -15,7 +15,7 @@ echo "Puxando a imagem mais recente do GHCR..."
 sudo docker-compose pull
 
 echo "Subindo os contêineres com a nova versão..."
-sudo docker-compose up -d
+sudo docker-compose up --build --no-cache -d
 
 echo ""
 echo "Aplicação atualizada com sucesso!"
