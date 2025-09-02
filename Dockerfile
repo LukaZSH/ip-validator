@@ -27,7 +27,16 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Habilita o mod_rewrite do Apache para URLs amigáveis
 RUN a2enmod rewrite
-RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
+RUN echo '<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html/public
+    <Directory /var/www/html/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
 # Define o diretório de trabalho
 WORKDIR /var/www/html
