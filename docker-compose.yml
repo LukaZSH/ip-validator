@@ -4,8 +4,7 @@ services:
     build: .
     ports:
       - "80:80"
-    volumes:
-      - .:/var/www/html
+    
     environment:
       DB_HOST: db
       DB_NAME: ip_validator
