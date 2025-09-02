@@ -1,5 +1,6 @@
 services:
   web:
+    image: ghcr.io/lukazsh/ip-validator:latest
     build: .
     ports:
       - "80:80"
