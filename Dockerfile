@@ -28,16 +28,18 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql zip
 
 RUN a2enmod rewrite
-RUN echo '<VirtualHost *:80>
+RUN <<EOF > /etc/apache2/sites-available/000-default.conf
+<VirtualHost *:80>
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/html/public
     <Directory /var/www/html/public>
         AllowOverride All
         Require all granted
     </Directory>
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+    ErrorLog \${APACHE_LOG_DIR}/error.log
+    CustomLog \${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+EOF
 
 WORKDIR /var/www/html
 
