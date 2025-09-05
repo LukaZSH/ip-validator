@@ -50,3 +50,4 @@ COPY --from=builder /app/vendor/ /var/www/html/vendor/
 COPY . .
 
 RUN chown -R www-data:www-data /var/www/html
+
