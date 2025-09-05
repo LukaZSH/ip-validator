@@ -6,7 +6,6 @@ COPY composer.json composer.lock ./
 
 RUN composer install --no-dev --no-scripts --no-interaction
 
-
 FROM php:8.1-apache
 
 RUN apt-get update && apt-get install -y \
@@ -27,19 +26,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql zip
 
+COPY docker/apache-vhost.conf /etc/apache2/sites-available/000-default.conf
+
 RUN a2enmod rewrite
-RUN <<EOF > /etc/apache2/sites-available/000-default.conf
-<VirtualHost *:80>
-    ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/html/public
-    <Directory /var/www/html/public>
-        AllowOverride All
-        Require all granted
-    </Directory>
-    ErrorLog \${APACHE_LOG_DIR}/error.log
-    CustomLog \${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-EOF
 
 RUN a2ensite 000-default.conf
 
