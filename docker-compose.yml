@@ -1,10 +1,8 @@
 services:
   web:
     image: ghcr.io/lukazsh/ip-validator:latest
-    build: .
     ports:
-      - "80:80"
-    
+      - "80:80"   
     environment:
       DB_HOST: db
       DB_NAME: ip_validator
