@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace app;
 
 class SessionHelper
 {
@@ -19,6 +19,26 @@ class SessionHelper
             'type' => $type,
             'message' => $message
         ];
+    }
+
+    /**
+     * Retorna e remove a mensagem de flash de um tipo específico.
+     * @param string $type 'success' ou 'error'
+     * @return string|null A mensagem ou null se não existir
+     */
+    public static function getFlashMessage(string $type): ?string
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (isset($_SESSION['flash_message']) && $_SESSION['flash_message']['type'] === $type) {
+            $message = $_SESSION['flash_message']['message'];
+            unset($_SESSION['flash_message']);
+            return $message;
+        }
+
+        return null;
     }
 
     public static function displayFlashMessage(): void

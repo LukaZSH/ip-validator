@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use App\Config\Database;
-use App\SessionHelper;
+use app\SessionHelper;
 use PDO;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\QrCode;

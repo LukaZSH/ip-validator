@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use App\Config\Database;
-use App\SessionHelper;
+use app\SessionHelper;
 use PDO;
 
 class AuthController

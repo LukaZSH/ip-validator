@@ -1,5 +1,5 @@
 <?php
-use App\SessionHelper;
+use app\SessionHelper;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">

@@ -32,10 +32,15 @@ RUN <<EOF > /etc/apache2/sites-available/000-default.conf
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/html/public
+    ServerName localhost
+    
     <Directory /var/www/html/public>
         AllowOverride All
         Require all granted
+        Options -Indexes +FollowSymLinks
+        DirectoryIndex index.php index.html
     </Directory>
+    
     ErrorLog \${APACHE_LOG_DIR}/error.log
     CustomLog \${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
