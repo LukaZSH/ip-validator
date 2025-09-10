@@ -54,8 +54,9 @@ Um painel de gerenciamento protegido por login permite que a equipe de TI gerenc
 O administrador pode atualizar dinamicamente o formulário de presença (Google Forms, etc.) e gerar QR Codes para o evento com um único clique.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/11f38536-75aa-459c-85f9-d52aa67fce26" alt="Atualização de Iframe" width="600"/>
+  <img width="1267" height="415" alt="image" src="https://github.com/user-attachments/assets/ef40e7ea-2d34-4e2e-b015-a34ac1238fb5" />
 </p>
+
 
 ### Fluxo de Validação do Aluno
 Para garantir a integridade do registro, o aluno passa por uma cadeia de validações:
