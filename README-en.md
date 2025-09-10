@@ -54,7 +54,7 @@ A login-protected management panel allows the IT team to manage the entire event
 The administrator can dynamically update the attendance form (e.g., Google Forms) and generate QR Codes for the event with a single click.
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/11f38536-75aa-459c-85f9-d52aa67fce26" alt="Iframe Update" width="600"/>
+  <img width="1267" height="415" alt="image" src="https://github.com/user-attachments/assets/64f7e05b-f5f5-45a9-b862-6f59ccc12ef3" />
 </p>
 
 ### Student Validation Flow
