@@ -43,6 +43,33 @@ try {
     $db->exec($sqlPresences);
     echo "Tabela 'presences' verificada/criada com sucesso.\n";
 
+    $sqlUsers = "
+    CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );";
+
+    $db->exec($sqlUsers);
+    echo "Tabela 'users' verificada/criada com sucesso.\n";
+
+    $stmt = $db->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+    $stmt->execute(['username' => 'suporte']);
+    $userExists = $stmt->fetchColumn();
+
+    if ($userExists == 0) {
+        $defaultPassword = password_hash('1n&$p@r', PASSWORD_DEFAULT);
+        $stmt = $db->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
+        $stmt->execute([
+            'username' => 'suporte',
+            'password' => $defaultPassword
+        ]);
+        echo "Usuário administrativo 'suporte' criado com sucesso.\n";
+    } else {
+        echo "Usuário administrativo 'suporte' já existe.\n";
+    }
+
     echo "Setup do banco de dados concluído com sucesso!\n";
 
 } catch (\Exception $e) {

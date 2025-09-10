@@ -18,11 +18,6 @@ class Database
         $username = getenv('DB_USER');
         $password = getenv('DB_PASSWORD');
 
-        // Debug temporário para verificar as variáveis
-        error_log("DB_HOST: " . ($host ?: 'VAZIO'));
-        error_log("DB_NAME: " . ($db_name ?: 'VAZIO'));
-        error_log("DB_USER: " . ($username ?: 'VAZIO'));
-        error_log("DB_PASSWORD: " . ($password ? 'DEFINIDA' : 'VAZIA'));
 
         try {
             // Cria a conexão PDO
