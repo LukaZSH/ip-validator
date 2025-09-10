@@ -2,16 +2,21 @@
 
 echo "Iniciando a atualização da aplicação ip-validator..."
 
-# Carrega as variáveis de ambiente do arquivo .env
-if [ -f .env ]; then
-    echo "Carregando variáveis de ambiente do .env..."
-    export $(grep -v '^#' .env | xargs)
-else
-    echo "AVISO: Arquivo .env não encontrado!"
-fi
-
 echo "Atualizando o repositório com 'git pull'..."
 git pull origin master
+
+# Carrega as variáveis de ambiente do arquivo .env APÓS o git pull
+if [ -f .env ]; then
+    echo "Carregando variáveis de ambiente do .env..."
+    # Usa source em vez de export para lidar melhor com caracteres especiais
+    set -a  # automatically export all variables
+    source .env
+    set +a  # stop automatically exporting
+    echo "Variáveis carregadas: DB_USER=$MYSQL_USER, DB_NAME=$MYSQL_DATABASE"
+else
+    echo "ERRO: Arquivo .env não encontrado após git pull!"
+    exit 1
+fi
 
 echo "Parando os contêineres atuais"
 sudo -E docker-compose down
