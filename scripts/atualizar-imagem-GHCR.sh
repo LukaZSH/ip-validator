@@ -2,6 +2,9 @@
 
 echo "Iniciando a atualização da aplicação ip-validator..."
 
+# Navega para o diretório raiz do projeto
+cd "$(dirname "$0")/.."
+
 echo "Atualizando o repositório com 'git pull'..."
 git pull origin master
 
@@ -15,6 +18,7 @@ if [ -f .env ]; then
     echo "Variáveis carregadas: DB_USER=$MYSQL_USER, DB_NAME=$MYSQL_DATABASE"
 else
     echo "ERRO: Arquivo .env não encontrado após git pull!"
+    echo "Procurando em: $(pwd)/.env"
     exit 1
 fi
 
