@@ -5,9 +5,9 @@ services:
       - "80:80"   
     environment:
       DB_HOST: db
-      DB_NAME: ip_validator
-      DB_USER: user
-      DB_PASSWORD: password
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     depends_on:
       - db
     networks:
