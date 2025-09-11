@@ -69,10 +69,10 @@ Para garantir a integridade do registro, o aluno passa por uma cadeia de valida�
 ## 🔄 Fluxo de Trabalho DevOps
 
 ### Pipeline de CI/CD com GitHub Actions
-A pipeline é acionada a cada push na branch `main` e executa uma série de verificações para garantir a qualidade e a segurança do código antes de publicar a nova versão da imagem Docker.
+A pipeline é acionada a cada push na branch `master` e executa uma série de verificações para garantir a qualidade e a segurança do código antes de publicar a nova versão da imagem Docker.
 
-*Espaço para imagem da Pipeline de CI/CD*
-`![Pipeline de CI/CD]()`
+<img width="1007" height="394" alt="image" src="https://github.com/user-attachments/assets/49bdcae5-7816-4b59-ae54-6aea6ab39ca0" />
+
 
 ### Monitoramento com Grafana
 A stack de observabilidade permite visualizar e pesquisar os logs de todos os contêineres em tempo real através de um dashboard no Grafana, essencial para a depuração durante os eventos.
