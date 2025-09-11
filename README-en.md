@@ -68,10 +68,10 @@ To ensure registration integrity, the student undergoes a series of validations:
 ## 🔄 DevOps Workflow
 
 ### CI/CD Pipeline with GitHub Actions
-The pipeline is triggered on every push to the `main` branch and runs a series of checks to ensure code quality and security before publishing the new version of the Docker image.
+The pipeline is triggered on every push to the `master` branch and runs a series of checks to ensure code quality and security before publishing the new version of the Docker image.
 
-*Space for CI/CD Pipeline image*
-`![CI/CD Pipeline]()`
+<img width="1007" height="394" alt="image" src="https://github.com/user-attachments/assets/120188ac-6e0b-4678-a99b-675b84a0000b" />
+
 
 ### Monitoring with Grafana
 The observability stack allows for real-time viewing and searching of logs from all containers through a Grafana dashboard, which is essential for debugging during events.
