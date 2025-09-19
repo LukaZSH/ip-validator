@@ -21,19 +21,21 @@ scrape_configs:
           __path__: /var/lib/docker/containers/*/*-json.log
     pipeline_stages:
       - docker: {}
+      # Filter only for web container (ip-validator)
       - match:
-          selector: '{job="apache_access"} |~ "^\\d+\\.\\d+\\.\\d+\\.\\d+"'
+          selector: '{job="apache_access"} |~ "ip-validator"'
           stages:
-          - regex:
-              expression: '^(?P<remote_addr>\S+) (?P<remote_user>\S+) \[(?P<time_local>[^\]]+)\] "(?P<method>\S+) (?P<request_uri>\S+) (?P<server_protocol>\S+)" (?P<status>\d+) (?P<body_bytes_sent>\d+) "(?P<http_referer>[^"]*)" "(?P<http_user_agent>[^"]*)"'
-          - timestamp:
-              source: time_local
-              format: '02/Jan/2006:15:04:05 -0700'
-          - labels:
-              method:
-              status:
-              remote_addr:
-              request_uri:
+          # Match Apache access log pattern
+          - match:
+              selector: '{job="apache_access"} |~ "\\d+\\.\\d+\\.\\d+\\.\\d+.*GET|POST|PUT|DELETE"'
+              stages:
+              - regex:
+                  expression: '(?P<remote_addr>\d+\.\d+\.\d+\.\d+) (?P<remote_user>\S+) (?P<remote_user2>\S+) \[(?P<time_local>[^\]]+)\] "(?P<method>\S+) (?P<request_uri>\S+) (?P<server_protocol>[^"]*)" (?P<status>\d+) (?P<body_bytes_sent>\d+).*'
+              - labels:
+                  method:
+                  status:
+                  remote_addr:
+                  request_uri:
 
   # MySQL Database Logs
   - job_name: mysql_logs
@@ -47,23 +49,25 @@ scrape_configs:
           __path__: /var/lib/docker/containers/*/*-json.log
     pipeline_stages:
       - docker: {}
+      # Filter only for MySQL container
       - match:
-          selector: '{job="mysql_logs"}'
+          selector: '{job="mysql_logs"} |~ "ip-validator-db|mysql"'
           stages:
-          # Filter for MySQL container logs
+          # MySQL error/info logs
           - match:
-              selector: '{job="mysql_logs"} |~ "mysqld|mysql"'
+              selector: '{job="mysql_logs"} |~ "\\[Warning\\]|\\[System\\]|\\[ERROR\\]"'
               stages:
               - regex:
-                  expression: '(?P<timestamp>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z) (?P<level>\w+) (?P<message>.*)'
+                  expression: '.*\\[(?P<level>Warning|System|ERROR)\\].*(?P<component>\\[\\w+\\]).*(?P<message>.*)'
               - labels:
                   level:
-          # Capture slow query logs specifically
+                  component:
+          # Capture slow query logs specifically  
           - match:
               selector: '{job="mysql_logs"} |~ "Query_time|Lock_time"'
               stages:
               - regex:
-                  expression: '# Query_time: (?P<query_time>[\d.]+)  Lock_time: (?P<lock_time>[\d.]+)'
+                  expression: '.*Query_time: (?P<query_time>[\\d.]+).*Lock_time: (?P<lock_time>[\\d.]+)'
               - labels:
                   log_type: "slow_query"
 
@@ -79,31 +83,24 @@ scrape_configs:
           __path__: /var/lib/docker/containers/*/*-json.log
     pipeline_stages:
       - docker: {}
+      # Filter only for web container (PHP/Apache)
       - match:
-          selector: '{job="php_app"}'
+          selector: '{job="php_app"} |~ "ip-validator"'
           stages:
           # PHP Error Logs
           - match:
-              selector: '{job="php_app"} |~ "PHP|ERROR|WARN|FATAL"'
+              selector: '{job="php_app"} |~ "PHP|ERROR|WARN|FATAL|Notice|Warning"'
               stages:
               - regex:
-                  expression: '\[(?P<timestamp>[^\]]+)\] (?P<level>\w+): (?P<message>.*)'
+                  expression: '.*\\[(?P<timestamp>[^\\]]+)\\].*(?P<level>ERROR|WARN|FATAL|Notice|Warning|PHP).*(?P<message>.*)'
               - labels:
                   level:
                   log_type: "php_error"
-          # Application-specific logs (login attempts, etc)
+          # Application-specific logs (simpler approach - catch any structured data)
           - match:
-              selector: '{job="php_app"} |~ "authentication|login|presence|qr_code"'
+              selector: '{job="php_app"} |~ "authentication|login|presence|qr_code|evento"'
               stages:
-              - json:
-                  expressions:
-                    event: event
-                    status: status
-                    ip: ip
-                    username: username
               - labels:
-                  event:
-                  status:
                   log_type: "app_event"
 
   # Container Health and Generic Logs
