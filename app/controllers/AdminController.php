@@ -78,6 +78,11 @@ class AdminController
                 ':status' => $status
             ]);
 
+            // Log successful event creation
+            $clientIp = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+            $userId = $_SESSION['user_id'] ?? 'unknown';
+            $this->logAdminActivity('create', 'event', $db->lastInsertId(), 'success', $clientIp, $userId, "Event '{$name}' created");
+
             SessionHelper::setFlashMessage('success', "Evento '{$name}' criado com sucesso!");
             header('Location: /admin');
             exit;
@@ -157,6 +162,11 @@ class AdminController
                 ':id' => $id
             ]);
 
+            // Log successful event update
+            $clientIp = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+            $userId = $_SESSION['user_id'] ?? 'unknown';
+            $this->logAdminActivity('update', 'event', $id, 'success', $clientIp, $userId, "Event '{$name}' updated");
+
             SessionHelper::setFlashMessage('success', "Evento '{$name}' atualizado com sucesso!");
             header('Location: /admin');
             exit;
@@ -179,6 +189,12 @@ class AdminController
             $db = Database::getInstance()->getConnection();
             $stmt = $db->prepare("DELETE FROM events WHERE id = :id");
             $stmt->execute(['id' => $id]);
+            
+            // Log successful event deletion
+            $clientIp = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+            $userId = $_SESSION['user_id'] ?? 'unknown';
+            $this->logAdminActivity('delete', 'event', $id, 'success', $clientIp, $userId, "Event ID {$id} deleted");
+            
             SessionHelper::setFlashMessage('success', 'Evento excluído com sucesso!');
             header('Location: /admin');
             exit;
@@ -192,28 +208,103 @@ class AdminController
     public function generateQrCode()
     {
         $id = $_GET['id'] ?? null;
-        if (!$id) { die("ID do evento não fornecido."); }
+        $startTime = microtime(true);
+        $clientIp = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        $userId = $_SESSION['user_id'] ?? 'unknown';
+        
+        if (!$id) { 
+            $this->logQRCodeGeneration(null, null, 'failed', $clientIp, $userId, $startTime, 'ID do evento não fornecido');
+            die("ID do evento não fornecido."); 
+        }
+        
         try {
             $db = Database::getInstance()->getConnection();
             $stmt = $db->prepare("SELECT slug FROM events WHERE id = :id");
             $stmt->execute(['id' => $id]);
             $event = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (!$event) { die("Evento não encontrado."); }
+            
+            if (!$event) { 
+                $this->logQRCodeGeneration($id, null, 'failed', $clientIp, $userId, $startTime, 'Evento não encontrado');
+                die("Evento não encontrado."); 
+            }
+            
             $url = "http://192.168.3.2/evento/" . $event['slug'];
             $qrCode = QrCode::create($url)
                 ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
                 ->setSize(400)
                 ->setMargin(10)
                 ->setBackgroundColor(new Color(255, 255, 255));
+            
             $logoPath = '/var/www/html/public/Logo/logo-unespar.jpeg';
             $logo = Logo::create($logoPath)->setResizeToWidth(100);
             $writer = new PngWriter();
             $result = $writer->write($qrCode, $logo);
+            
+            // Log successful QR code generation
+            $this->logQRCodeGeneration($id, $event['slug'], 'success', $clientIp, $userId, $startTime);
+            
             header('Content-Type: ' . $result->getMimeType());
             echo $result->getString();
             exit;
         } catch (\Exception $e) {
+            // Log QR code generation error
+            $this->logQRCodeGeneration($id, $event['slug'] ?? null, 'error', $clientIp, $userId, $startTime, $e->getMessage());
             die("Erro ao gerar o QR Code: " . $e->getMessage());
         }
+    }
+
+    /**
+     * Log QR code generation activities with structured data for monitoring
+     */
+    private function logQRCodeGeneration($eventId, $eventSlug, $status, $clientIp, $userId, $startTime, $errorMessage = null)
+    {
+        $duration = round((microtime(true) - $startTime) * 1000, 2);
+        
+        $logData = [
+            'event' => 'qr_code_generation',
+            'event_id' => $eventId,
+            'event_slug' => $eventSlug,
+            'status' => $status, // success, failed, error
+            'user_id' => $userId,
+            'client_ip' => $clientIp,
+            'duration_ms' => $duration,
+            'timestamp' => time(),
+            'datetime' => date('c'),
+            'service' => 'ip-validator',
+            'component' => 'admin'
+        ];
+
+        if ($errorMessage) {
+            $logData['error_message'] = $errorMessage;
+        }
+
+        // Output structured log for Promtail to collect
+        error_log(json_encode($logData));
+    }
+
+    /**
+     * Log general admin activities (CRUD operations, etc.)
+     */
+    private function logAdminActivity($action, $resourceType, $resourceId, $status, $clientIp, $userId, $details = null)
+    {
+        $logData = [
+            'event' => 'admin_activity',
+            'action' => $action, // create, read, update, delete
+            'resource_type' => $resourceType, // event, user, etc.
+            'resource_id' => $resourceId,
+            'status' => $status,
+            'user_id' => $userId,
+            'client_ip' => $clientIp,
+            'timestamp' => time(),
+            'datetime' => date('c'),
+            'service' => 'ip-validator',
+            'component' => 'admin'
+        ];
+
+        if ($details) {
+            $logData['details'] = $details;
+        }
+
+        error_log(json_encode($logData));
     }
 }

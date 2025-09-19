@@ -1,15 +1,23 @@
 {
-  "dashboard": {
-    "id": null,
-    "title": "🎯 IP Validator - Ultimate Application Monitoring",
-    "tags": ["ip-validator", "logs", "monitoring", "production", "advanced"],
-    "style": "dark",
-    "timezone": "America/Sao_Paulo",
-    "refresh": "5s",
-    "time": {
-      "from": "now-1h",
-      "to": "now"
-    },
+  "id": null,
+  "title": "🎯 IP Validator - Ultimate Application Monitoring",
+  "tags": ["ip-validator", "logs", "monitoring", "production", "advanced"],
+  "style": "dark",
+  "timezone": "America/Sao_Paulo",
+  "refresh": "5s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": []
+  },
+  "schemaVersion": 30,
+  "version": 1,
     "panels": [
       {
         "id": 1,
@@ -19,7 +27,10 @@
         "targets": [
           {
             "expr": "sum(rate({job=\"apache_access\"}[5m]))",
-            "refId": "A"
+            "refId": "A",
+            "datasource": {
+              "type": "loki"
+            }
           }
         ],
         "fieldConfig": {
@@ -60,7 +71,10 @@
         "targets": [
           {
             "expr": "(sum(rate({job=\"apache_access\", status=~\"[45]..\"}[5m])) / sum(rate({job=\"apache_access\"}[5m]))) * 100",
-            "refId": "A"
+            "refId": "A",
+            "datasource": {
+              "type": "loki"
+            }
           }
         ],
         "fieldConfig": {
@@ -100,7 +114,10 @@
         "targets": [
           {
             "expr": "sum(rate({job=\"mysql_logs\", log_type=\"slow_query\"}[5m]))",
-            "refId": "A"
+            "refId": "A",
+            "datasource": {
+              "type": "loki"
+            }
           }
         ],
         "fieldConfig": {
@@ -566,7 +583,10 @@
         "targets": [
           {
             "expr": "{job=\"apache_access\"}",
-            "refId": "A"
+            "refId": "A",
+            "datasource": {
+              "type": "loki"
+            }
           }
         ],
         "options": {
@@ -624,8 +644,7 @@
           "wrapLogMessage": false
         }
       }
-    ]
-  },
+  ],
   "folderId": null,
   "overwrite": true
 }

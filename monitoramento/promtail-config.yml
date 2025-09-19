@@ -90,18 +90,42 @@ scrape_configs:
       - match:
           selector: '{job="php_app"} |~ "ip-validator"'
           stages:
-          # PHP Error Logs - Fixed regex
+          # PHP Error Logs - Traditional logs
           - match:
-              selector: '{job="php_app"} |~ "PHP|ERROR|WARN|FATAL|Notice|Warning"'
+              selector: '{job="php_app"} |~ "PHP|ERROR|WARN|FATAL|Notice|Warning" !~ "authentication_attempt|qr_code_generation|db_operation|db_connection|user_activity|admin_activity"'
               stages:
               - regex:
                   expression: '.*\[(?P<timestamp>[^\]]+)\].*(?P<level>ERROR|WARN|FATAL|Notice|Warning|PHP).*(?P<message>.*)'
               - labels:
                   level:
                   log_type: "php_error"
-          # Application-specific logs (simpler approach - catch any structured data)
+          # Structured JSON logs from our custom logging
           - match:
-              selector: '{job="php_app"} |~ "authentication|login|presence|qr_code|evento"'
+              selector: '{job="php_app"} |~ "authentication_attempt|qr_code_generation|db_operation|db_connection|user_activity|admin_activity"'
+              stages:
+              - json:
+                  expressions:
+                    event: event
+                    status: status
+                    client_ip: client_ip
+                    username: username
+                    user_id: user_id
+                    event_id: event_id
+                    event_slug: event_slug
+                    operation: operation
+                    duration_ms: duration_ms
+                    component: component
+                    timestamp: timestamp
+                    datetime: datetime
+              - labels:
+                  event:
+                  status:
+                  client_ip:
+                  component:
+                  log_type: "structured_event"
+          # General application logs
+          - match:
+              selector: '{job="php_app"} |~ "login|presence|evento" !~ "authentication_attempt|qr_code_generation|db_operation|db_connection|user_activity|admin_activity"'
               stages:
               - labels:
                   log_type: "app_event"
