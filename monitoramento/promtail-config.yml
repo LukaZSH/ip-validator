@@ -30,7 +30,10 @@ scrape_configs:
               selector: '{job="apache_access"} |~ "\\d+\\.\\d+\\.\\d+\\.\\d+.*GET|POST|PUT|DELETE"'
               stages:
               - regex:
-                  expression: '(?P<remote_addr>\d+\.\d+\.\d+\.\d+) (?P<remote_user>\S+) (?P<remote_user2>\S+) \[(?P<time_local>[^\]]+)\] "(?P<method>\S+) (?P<request_uri>\S+) (?P<server_protocol>[^"]*)" (?P<status>\d+) (?P<body_bytes_sent>\d+).*'
+                  expression: '(?P<remote_addr>\\d+\\.\\d+\\.\\d+\\.\\d+) (?P<remote_user>\\S+) (?P<remote_user2>\\S+) \\[(?P<time_local>[^\\]]+)\\] "(?P<method>\\S+) (?P<request_uri>\\S+) (?P<server_protocol>[^"]*)" (?P<status>\\d+) (?P<body_bytes_sent>\\d+).*'
+              - timestamp:
+                  source: time_local
+                  format: '02/Jan/2006:15:04:05 -0700'
               - labels:
                   method:
                   status:
@@ -87,7 +90,7 @@ scrape_configs:
       - match:
           selector: '{job="php_app"} |~ "ip-validator"'
           stages:
-          # PHP Error Logs
+          # PHP Error Logs - Fixed regex
           - match:
               selector: '{job="php_app"} |~ "PHP|ERROR|WARN|FATAL|Notice|Warning"'
               stages:
@@ -124,7 +127,7 @@ scrape_configs:
             tag: attrs.tag
           source: attrs
       - regex:
-          expression: '(?P<container_name>(?:[^|]*))\|'
+          expression: '(?P<container_name>(?:[^|]*))|'
           source: tag
       - match:
           selector: '{container_name=~"ip-validator.*|mysql.*|grafana.*|loki.*|promtail.*"}'
@@ -157,13 +160,13 @@ scrape_configs:
     pipeline_stages:
       - docker: {}
       - match:
-          selector: '{job="grafana_logs"}'
+          selector: '{job="grafana_logs"} |~ "grafana"'
           stages:
           - match:
               selector: '{job="grafana_logs"} |~ "lvl=|level="'
               stages:
               - regex:
-                  expression: 'lvl=(?P<level>\w+)|level=(?P<level>\w+)'
+                  expression: 'lvl=(?P<level>\\w+)|level=(?P<level>\\w+)'
               - labels:
                   level:
 
@@ -180,12 +183,12 @@ scrape_configs:
     pipeline_stages:
       - docker: {}
       - match:
-          selector: '{job="loki_logs"}'
+          selector: '{job="loki_logs"} |~ "loki"'
           stages:
           - match:
               selector: '{job="loki_logs"} |~ "level=|ts="'
               stages:
               - regex:
-                  expression: 'level=(?P<level>\w+)'
+                  expression: 'level=(?P<level>\\w+)'
               - labels:
                   level:
