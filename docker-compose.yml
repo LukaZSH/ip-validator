@@ -28,6 +28,8 @@ services:
     container_name: loki
     ports:
       - "3100:3100"
+    volumes:
+      - ./monitoramento/loki-config.yml:/etc/loki/local-config.yaml
     command: -config.file=/etc/loki/local-config.yaml
     restart: unless-stopped
     networks:
