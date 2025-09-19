@@ -89,3 +89,8 @@ A stack de observabilidade permite visualizar e pesquisar os logs de todos os co
 
 ### Infraestrutura como Código com Ansible
 A configuração do servidor de produção é totalmente automatizada com Ansible. O playbook prepara um servidor Ubuntu limpo, instala todas as dependências e faz o deploy da aplicação.
+
+Imagem ilustrativa de como o Ansible funciona:
+
+<img width="685" height="384" alt="image" src="https://github.com/user-attachments/assets/fd881269-8765-47e7-9dd8-120a0b7e25c0" />
+
