@@ -27,10 +27,10 @@ scrape_configs:
           stages:
           # Match Apache access log pattern
           - match:
-              selector: '{job="apache_access"} |~ "\\d+\\.\\d+\\.\\d+\\.\\d+.*GET|POST|PUT|DELETE"'
+              selector: '{job="apache_access"} |~ "\d+\.\d+\.\d+\.\d+.*GET|POST|PUT|DELETE"'
               stages:
               - regex:
-                  expression: '(?P<remote_addr>\\d+\\.\\d+\\.\\d+\\.\\d+) (?P<remote_user>\\S+) (?P<remote_user2>\\S+) \\[(?P<time_local>[^\\]]+)\\] "(?P<method>\\S+) (?P<request_uri>\\S+) (?P<server_protocol>[^"]*)" (?P<status>\\d+) (?P<body_bytes_sent>\\d+).*'
+                  expression: '(?P<remote_addr>\d+\.\d+\.\d+\.\d+) (?P<remote_user>\S+) (?P<remote_user2>\S+) \[(?P<time_local>[^\]]+)\] "(?P<method>\S+) (?P<request_uri>\S+) (?P<server_protocol>[^"]*)" (?P<status>\d+) (?P<body_bytes_sent>\d+).*'
               - timestamp:
                   source: time_local
                   format: '02/Jan/2006:15:04:05 -0700'
@@ -58,10 +58,10 @@ scrape_configs:
           stages:
           # MySQL error/info logs
           - match:
-              selector: '{job="mysql_logs"} |~ "\\[Warning\\]|\\[System\\]|\\[ERROR\\]"'
+              selector: '{job="mysql_logs"} |~ "\[Warning\]|\[System\]|\[ERROR\]"'
               stages:
               - regex:
-                  expression: '.*\\[(?P<level>Warning|System|ERROR)\\].*(?P<component>\\[\\w+\\]).*(?P<message>.*)'
+                  expression: '.*\[(?P<level>Warning|System|ERROR)\].*(?P<component>\[\w+\]).*(?P<message>.*)'
               - labels:
                   level:
                   component:
@@ -70,7 +70,7 @@ scrape_configs:
               selector: '{job="mysql_logs"} |~ "Query_time|Lock_time"'
               stages:
               - regex:
-                  expression: '.*Query_time: (?P<query_time>[\\d.]+).*Lock_time: (?P<lock_time>[\\d.]+)'
+                  expression: '.*Query_time: (?P<query_time>[\d.]+).*Lock_time: (?P<lock_time>[\d.]+)'
               - labels:
                   log_type: "slow_query"
 
@@ -95,7 +95,7 @@ scrape_configs:
               selector: '{job="php_app"} |~ "PHP|ERROR|WARN|FATAL|Notice|Warning"'
               stages:
               - regex:
-                  expression: '.*\\[(?P<timestamp>[^\\]]+)\\].*(?P<level>ERROR|WARN|FATAL|Notice|Warning|PHP).*(?P<message>.*)'
+                  expression: '.*\[(?P<timestamp>[^\]]+)\].*(?P<level>ERROR|WARN|FATAL|Notice|Warning|PHP).*(?P<message>.*)'
               - labels:
                   level:
                   log_type: "php_error"
@@ -127,7 +127,7 @@ scrape_configs:
             tag: attrs.tag
           source: attrs
       - regex:
-          expression: '(?P<container_name>(?:[^|]*))|'
+          expression: '(?P<container_name>(?:[^|]*))'
           source: tag
       - match:
           selector: '{container_name=~"ip-validator.*|mysql.*|grafana.*|loki.*|promtail.*"}'
@@ -166,7 +166,7 @@ scrape_configs:
               selector: '{job="grafana_logs"} |~ "lvl=|level="'
               stages:
               - regex:
-                  expression: 'lvl=(?P<level>\\w+)|level=(?P<level>\\w+)'
+                  expression: 'lvl=(?P<level>\w+)|level=(?P<level>\w+)'
               - labels:
                   level:
 
@@ -189,6 +189,6 @@ scrape_configs:
               selector: '{job="loki_logs"} |~ "level=|ts="'
               stages:
               - regex:
-                  expression: 'level=(?P<level>\\w+)'
+                  expression: 'level=(?P<level>\w+)'
               - labels:
                   level:
