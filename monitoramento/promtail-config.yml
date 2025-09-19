@@ -27,7 +27,7 @@ scrape_configs:
           stages:
           # Match Apache access log pattern
           - match:
-              selector: '{job="apache_access"} |~ "\d+\.\d+\.\d+\.\d+.*GET|POST|PUT|DELETE"'
+              selector: '{job="apache_access"} |~ "GET|POST|PUT|DELETE"'
               stages:
               - regex:
                   expression: '(?P<remote_addr>\d+\.\d+\.\d+\.\d+) (?P<remote_user>\S+) (?P<remote_user2>\S+) \[(?P<time_local>[^\]]+)\] "(?P<method>\S+) (?P<request_uri>\S+) (?P<server_protocol>[^"]*)" (?P<status>\d+) (?P<body_bytes_sent>\d+).*'
@@ -58,7 +58,7 @@ scrape_configs:
           stages:
           # MySQL error/info logs
           - match:
-              selector: '{job="mysql_logs"} |~ "\[Warning\]|\[System\]|\[ERROR\]"'
+              selector: '{job="mysql_logs"} |~ "Warning|System|ERROR"'
               stages:
               - regex:
                   expression: '.*\[(?P<level>Warning|System|ERROR)\].*(?P<component>\[\w+\]).*(?P<message>.*)'
