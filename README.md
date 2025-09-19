@@ -77,8 +77,15 @@ A pipeline é acionada a cada push na branch `master` e executa uma série de ve
 ### Monitoramento com Grafana
 A stack de observabilidade permite visualizar e pesquisar os logs de todos os contêineres em tempo real através de um dashboard no Grafana, essencial para a depuração durante os eventos.
 
-*Espaço para imagem do Grafana*
-`![Dashboard Grafana]()`
+### Dashboard com estatísticas da Aplicação
+
+<img width="1919" height="1079" alt="Print do Grafana configurado" src="https://github.com/user-attachments/assets/8b6efcbc-26ea-4d18-b910-fa1b0e2f68b9" />
+
+---
+### Dashboard com estatísticas da Infraestrutura do servidor
+
+<img width="1915" height="889" alt="Print do Grafana - Infra" src="https://github.com/user-attachments/assets/0495b455-55ae-45d9-b99c-f2d72009c11e" />
+
 
 ### Infraestrutura como Código com Ansible
 A configuração do servidor de produção é totalmente automatizada com Ansible. O playbook prepara um servidor Ubuntu limpo, instala todas as dependências e faz o deploy da aplicação.
