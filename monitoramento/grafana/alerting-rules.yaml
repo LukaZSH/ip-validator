@@ -77,7 +77,7 @@ groups:
 
       - alert: ContainerRestarts
         expr: |
-          sum(count_over_time({job=~".*"} |~ "restart" [10m])) > 2
+          sum(count_over_time({job=~".+"} |~ "restart" [10m])) > 2
         for: 1m
         labels:
           severity: warning

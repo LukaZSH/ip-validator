@@ -24,112 +24,10 @@
   "panels": [
     {
       "datasource": {
-        "type": "loki",
-        "uid": "loki"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
-      "description": "Container status and restart counts",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 1
-              },
-              {
-                "color": "red",
-                "value": 3
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Restarts (1h)"
-            },
-            "properties": [
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-background"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 12,
-        "x": 0,
-        "y": 0
-      },
-      "id": 1,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": true
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "editorMode": "code",
-          "expr": "sum by (container_name) (count_over_time({job=~\".*\"} |~ \"restart\" [1h]))",
-          "queryType": "",
-          "refId": "A"
-        }
-      ],
-      "title": "Container Status & Restarts",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {},
-            "indexByName": {},
-            "renameByName": {
-              "container_name": "Container",
-              "Value": "Restarts (1h)"
-            }
-          }
-        }
-      ],
-      "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "description": "Database performance monitoring",
+      "description": "CPU usage percentage across all cores",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -143,7 +41,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -157,7 +55,109 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "100 - (avg(irate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)",
+          "legendFormat": "CPU Usage",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "CPU Usage",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "description": "Memory usage in GB and percentage",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -176,17 +176,46 @@
                 "value": null
               },
               {
+                "color": "yellow",
+                "value": 70
+              },
+              {
                 "color": "red",
-                "value": 80
+                "value": 90
               }
             ]
           },
-          "unit": "ms"
+          "unit": "bytes"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Memory Used %"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "max",
+                "value": 100
+              },
+              {
+                "id": "min",
+                "value": 0
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 6,
+        "h": 8,
         "w": 12,
         "x": 12,
         "y": 0
@@ -207,24 +236,37 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "loki"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "avg(avg_over_time({job=\"php_app\", service=\"ip-validator\"} | json | event=\"db_operation\" | unwrap duration_ms [5m]))",
-          "queryType": "",
+          "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes",
+          "legendFormat": "Memory Used",
+          "range": true,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes) * 100",
+          "hide": false,
+          "legendFormat": "Memory Used %",
+          "range": true,
+          "refId": "B"
         }
       ],
-      "title": "Database Performance - Average Query Duration",
+      "title": "Memory Usage",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "loki"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
-      "description": "Log volume per service to monitor system activity",
+      "description": "Network traffic in bytes per second",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -238,7 +280,7 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -252,7 +294,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -276,15 +318,28 @@
               }
             ]
           },
-          "unit": "reqps"
+          "unit": "Bps"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*Received.*/"
+            },
+            "properties": [
+              {
+                "id": "custom.transform",
+                "value": "negative-Y"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 6,
+        "h": 8,
         "w": 12,
         "x": 0,
-        "y": 6
+        "y": 8
       },
       "id": 3,
       "options": {
@@ -302,161 +357,37 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "loki"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (job) (rate({job=~\".+\"}[1m]))",
-          "queryType": "",
-          "refId": "A"
-        }
-      ],
-      "title": "Log Volume per Service",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "description": "Database connection status monitoring",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Success"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "mode": "fixed",
-                  "fixedColor": "green"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Failed"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "mode": "fixed",
-                  "fixedColor": "red"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 12,
-        "x": 12,
-        "y": 6
-      },
-      "id": 4,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "editorMode": "code",
-          "expr": "sum(rate({job=\"php_app\", service=\"ip-validator\"} | json | event=\"db_connection\" | status=\"success\" [1m]))",
-          "legendFormat": "Success",
-          "queryType": "",
+          "expr": "rate(node_network_transmit_bytes_total{device!=\"lo\"}[5m])",
+          "legendFormat": "{{device}} - Transmitted",
+          "range": true,
           "refId": "A"
         },
         {
           "datasource": {
-            "type": "loki",
-            "uid": "loki"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate({job=\"php_app\", service=\"ip-validator\"} | json | event=\"db_connection\" | status=\"failed\" [1m]))",
-          "legendFormat": "Failed",
-          "queryType": "",
+          "expr": "rate(node_network_receive_bytes_total{device!=\"lo\"}[5m])",
+          "hide": false,
+          "legendFormat": "{{device}} - Received",
+          "range": true,
           "refId": "B"
         }
       ],
-      "title": "Database Connection Status",
+      "title": "Network Traffic",
       "type": "timeseries"
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "loki"
+        "type": "prometheus",
+        "uid": "prometheus"
       },
-      "description": "Detailed database operations breakdown",
+      "description": "Disk space usage for all mounted filesystems",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -479,40 +410,76 @@
               },
               {
                 "color": "yellow",
-                "value": 100
+                "value": 70
               },
               {
                 "color": "red",
-                "value": 500
+                "value": 90
               }
             ]
           },
-          "unit": "ms"
+          "unit": "bytes"
         },
         "overrides": [
           {
             "matcher": {
               "id": "byName",
-              "options": "Avg Duration (ms)"
+              "options": "Used %"
             },
             "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
               {
                 "id": "custom.cellOptions",
                 "value": {
                   "type": "color-background"
                 }
+              },
+              {
+                "id": "max",
+                "value": 100
+              },
+              {
+                "id": "min",
+                "value": 0
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Available"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "bytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "bytes"
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 6,
-        "w": 24,
-        "x": 0,
-        "y": 12
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 8
       },
-      "id": 5,
+      "id": 4,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -529,25 +496,66 @@
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "loki"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "avg by (operation) (avg_over_time({job=\"php_app\", service=\"ip-validator\"} | json | event=\"db_operation\" | unwrap duration_ms [10m]))",
-          "queryType": "",
+          "expr": "node_filesystem_size_bytes{fstype!=\"tmpfs\",fstype!=\"devtmpfs\",fstype!=\"overlay\"}",
+          "format": "table",
+          "legendFormat": "__auto",
+          "range": false,
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "node_filesystem_avail_bytes{fstype!=\"tmpfs\",fstype!=\"devtmpfs\",fstype!=\"overlay\"}",
+          "format": "table",
+          "hide": false,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "expr": "((node_filesystem_size_bytes{fstype!=\"tmpfs\",fstype!=\"devtmpfs\",fstype!=\"overlay\"} - node_filesystem_avail_bytes{fstype!=\"tmpfs\",fstype!=\"devtmpfs\",fstype!=\"overlay\"}) / node_filesystem_size_bytes{fstype!=\"tmpfs\",fstype!=\"devtmpfs\",fstype!=\"overlay\"}) * 100",
+          "format": "table",
+          "hide": false,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "C"
         }
       ],
-      "title": "Database Operations Performance by Type",
+      "title": "Disk Space Usage",
       "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
         {
           "id": "organize",
           "options": {
-            "excludeByName": {},
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "device": false,
+              "fstype": true,
+              "instance": true,
+              "job": true
+            },
             "indexByName": {},
             "renameByName": {
-              "operation": "Operation Type",
-              "Value": "Avg Duration (ms)"
+              "Value #A": "Total",
+              "Value #B": "Available",
+              "Value #C": "Used %",
+              "mountpoint": "Mount Point"
             }
           }
         }
@@ -555,12 +563,12 @@
       "type": "table"
     }
   ],
-  "refresh": "30s",
+  "refresh": "10s",
   "schemaVersion": 37,
   "style": "dark",
   "tags": [
     "infrastructure",
-    "health",
+    "system-metrics",
     "monitoring",
     "ip-validator"
   ],

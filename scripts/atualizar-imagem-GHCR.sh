@@ -42,9 +42,6 @@ sudo -E docker-compose exec web php scripts/setup.php || echo "Setup já foi exe
 
 echo ""
 echo "Aplicação atualizada com sucesso!"
-echo "Credenciais de login:"
-echo "  Usuário: suporte"
-echo "  Senha: 1n&\$p@r"
 echo ""
 echo "Acesse: http://192.168.3.2"
 echo ""
